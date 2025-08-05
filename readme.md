@@ -3,6 +3,7 @@
   <img src="https://img.shields.io/badge/supports-PlaceholderAPI-yellow" height="30"/>
   <img src="https://img.shields.io/badge/license-MIT-green" height="30"/>
 </p>
+
 # CustomChat
 > 📢 A modern Minecraft chat plugin for Paper servers with full PlaceholderAPI support and rich message customization.
 
