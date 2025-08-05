@@ -1,33 +1,33 @@
 package org.rexi.customChat.listeners;
 
+import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.rexi.customChat.CustomChat;
 
 import java.util.Optional;
 
-public class ChatListener implements Listener {
+public class NewChatListener implements Listener {
     private final CustomChat plugin;
 
-    public ChatListener(CustomChat plugin) {
+    public NewChatListener(CustomChat plugin) {
         this.plugin = plugin;
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
-    public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
+    public void onAsyncPlayerChat(AsyncChatEvent event) {
         if (event.isCancelled()) return;
-
-        event.setCancelled(true); // Cancelar el manejo por defecto
+        event.setCancelled(true);
 
         Player player = event.getPlayer();
-        String message = event.getMessage();
+        String message = LegacyComponentSerializer.builder().hexColors().useUnusualXRepeatedCharacterHexFormat().extractUrls().build().serialize(event.message());
 
         // Ejecutar en el hilo principal
         Bukkit.getScheduler().runTask(plugin, () -> {

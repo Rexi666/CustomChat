@@ -10,7 +10,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.rexi.customChat.commands.CustomchatCommand;
 import org.rexi.customChat.config.ChatFormat;
-import org.rexi.customChat.listeners.ChatListener;
+import org.rexi.customChat.listeners.LegacyChatListener;
+import org.rexi.customChat.listeners.NewChatListener;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -23,7 +24,16 @@ public final class CustomChat extends JavaPlugin {
     public void onEnable() {
         saveDefaultConfig();
         loadFormats();
-        getServer().getPluginManager().registerEvents(new ChatListener(this), this);
+        if (hasClass("io.papermc.paper.event.player.AsyncChatEvent")) {
+            getServer().getPluginManager().registerEvents(new NewChatListener(this), this);
+
+            getLogger().info("Paper 1.19+ was detected, using Paper's chat event.");
+        } else {
+            getServer().getPluginManager().registerEvents(new LegacyChatListener(this), this);
+
+            getLogger().info("Unable to detect Paper 1.19+, using legacy chat event.");
+        }
+
         getCommand("customchat").setExecutor(new CustomchatCommand(this));
 
         getServer().getConsoleSender().sendMessage(Component.text("CustomChat plugin has been enabled!").color(NamedTextColor.GREEN));
@@ -70,5 +80,14 @@ public final class CustomChat extends JavaPlugin {
 
         // Si no, asumimos que es con códigos &
         return LegacyComponentSerializer.legacyAmpersand().deserialize(input);
+    }
+
+    private static boolean hasClass(String className) {
+        try {
+            Class.forName(className);
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
     }
 }
