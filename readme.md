@@ -1,6 +1,6 @@
 <p align="center">
   <img src="https://img.shields.io/badge/platform-Paper-blue" height="30" width="150"/>
-  <img src="https://img.shields.io/badge/supports-PlaceholderAPI-yellow" height="30" width="150"/>
+  <img src="https://img.shields.io/badge/supports-PlaceholderAPI-yellow" height="30" width="200"/>
   <img src="https://img.shields.io/badge/license-MIT-green" height="30" width="150"/>
 </p>
 
