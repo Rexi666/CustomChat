@@ -3,3 +3,8 @@ version: '1.0'
 main: org.rexi.customChat.CustomChat
 api-version: '1.18'
 author: Rexi666
+depend: [PlaceholderAPI]
+commands:
+  customchat:
+    description: Principal command for CustomChat plugin
+    aliases: [cc]
