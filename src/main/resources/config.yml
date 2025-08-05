@@ -4,30 +4,6 @@ messages:
   no_permission: "&cYou do not have permission to use this command."
   k_blocked: "&cYou cannot use &k in chat messages."
 
-# colorchat command, allows players to decide the color of their chat messages.
-# Players need customchat.colorchat.color.<color> permission to use a specific color.
-# And customchat.colorchat.gradient.<gradient> for gradients.
-colorchat:
-  enabled: true
-  gradients_enabled: true
-  colors:
-    black: true
-    dark_blue: true
-    dark_green: true
-    dark_aqua: true
-    dark_red: true
-    dark_purple: true
-    gold: true
-    gray: true
-    dark_gray: true
-    blue: true
-    green: true
-    aqua: true
-    red: true
-    light_purple: true
-    yellow: true
-    white: true
-
 block_k: true #Block &k in chat messages, preventing players from using the magic formatting code.
 
 formats:
