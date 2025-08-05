@@ -1,6 +1,8 @@
-![Made for Paper](https://img.shields.io/badge/platform-Paper-blue)
-![PlaceholderAPI](https://img.shields.io/badge/supports-PlaceholderAPI-yellow)
-![License: MIT](https://img.shields.io/badge/license-MIT-green)
+<p align="center">
+  <img src="https://img.shields.io/badge/platform-Paper-blue" height="30"/>
+  <img src="https://img.shields.io/badge/supports-PlaceholderAPI-yellow" height="30"/>
+  <img src="https://img.shields.io/badge/license-MIT-green" height="30"/>
+</p>
 # CustomChat
 > 📢 A modern Minecraft chat plugin for Paper servers with full PlaceholderAPI support and rich message customization.
 
@@ -65,7 +67,7 @@ Designed for performance and flexibility, CustomChat supports both legacy and mo
 📖 Wiki: Soon...
 
 Join my Discord server (Spanish/English):
-<p>
+<p align="center">
   <a href="https://discord.com/invite/a3zkKtrjTr">
     <img src="https://discordapp.com/api/guilds/1025688556779360266/widget.png?style=banner3" alt="Discord Invite"/>
   </a>
