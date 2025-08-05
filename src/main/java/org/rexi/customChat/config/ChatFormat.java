@@ -52,8 +52,20 @@ public class ChatFormat {
         if (!player.hasPermission("customchat.changecolor")) {
             message = message.replaceAll("&[0-9a-fk-orA-FK-OR]", "");
             message = message.replaceAll("<[^>]*>", "");
-        } else if (message.contains("&") || (message.contains("<") && message.contains(">"))) {
-            customColor = true;
+        } else {
+            if (plugin.getConfig().getBoolean("block_k")) {
+                message = message.replaceAll("&k", "");
+                message = message.replaceAll("<obf>", "");
+                player.sendMessage(plugin.deserialize(plugin.getConfig().getString("messages.block_k", "&cYou cannot use &k in chat messages.")));
+            }
+
+            if (!player.hasPermission("customchat.changeformat")) {
+                message = message.replaceAll("&[lkmnorLKMNOR]|</?(?i:obf|bold|st|u|i|reset|b)>", "");
+            }
+
+            if (message.contains("&") || (message.contains("<") && message.contains(">"))) {
+                customColor = true;
+            }
         }
 
         String formatted;
