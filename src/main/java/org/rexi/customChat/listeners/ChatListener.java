@@ -22,6 +22,8 @@ public class ChatListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
+        if (event.isCancelled()) return;
+
         event.setCancelled(true); // Cancelar el manejo por defecto
 
         Player player = event.getPlayer();
