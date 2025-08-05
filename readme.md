@@ -1,8 +1,8 @@
-# CustomChat
-> 📢 A modern Minecraft chat plugin for Paper servers with full PlaceholderAPI support and rich message customization.
 ![Made for Paper](https://img.shields.io/badge/platform-Paper-blue)
 ![PlaceholderAPI](https://img.shields.io/badge/supports-PlaceholderAPI-yellow)
 ![License: MIT](https://img.shields.io/badge/license-MIT-green)
+# CustomChat
+> 📢 A modern Minecraft chat plugin for Paper servers with full PlaceholderAPI support and rich message customization.
 
 CustomChat is a highly customizable chat formatting plugin for Paper Minecraft servers. It allows you to create different chat formats based on permissions, with support for colors, hover messages, click actions, and [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) integration.
 
