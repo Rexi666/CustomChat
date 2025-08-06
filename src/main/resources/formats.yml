@@ -27,12 +27,7 @@ formats:
     two_points: "&8»"
     message: "<gray>{message}"
     hover:
-      message:
-        - ' &8&m───────────────'
-        - ' &eℹ Information:'
-        - '    &7Name: &r&f{displayName}'
-        - '    &7Money: %vault_eco_balance_formatted%$'
-        - ' &8&m───────────────'
-      click_action:
-        type: "suggest_command"
-        value: "/msg {displayName}"
+      message: [] # No hover message
+      click_action: # No click action
+        type: "none"
+        value: ""
