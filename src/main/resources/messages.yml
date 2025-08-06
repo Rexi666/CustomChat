@@ -1,0 +1,7 @@
+messages:
+  config_reload: "&aConfiguration reloaded successfully!"
+  usage: "&cUsage: /customchat reload or /customchat version"
+  no_permission: "&cYou do not have permission to use this command."
+  k_blocked: "&cYou cannot use the format k in chat messages."
+  new_version_available: "&eA new version of CustomChat is available! &b{current_version} &e-> &b{new_version}. &eDownload it at &b{url]}"
+  latest_version: "&aYou are using the latest version of CustomChat! &b{version}"

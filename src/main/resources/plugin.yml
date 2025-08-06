@@ -1,5 +1,5 @@
 name: CustomChat
-version: '1.0'
+version: '${version}'
 main: org.rexi.customChat.CustomChat
 api-version: '1.18'
 author: Rexi666
@@ -8,3 +8,7 @@ commands:
   customchat:
     description: Principal command for CustomChat plugin
     aliases: [cc]
+permissions:
+  customchat.format.default:
+    description: Default format permission
+    default: true

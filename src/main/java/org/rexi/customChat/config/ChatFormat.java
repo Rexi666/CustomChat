@@ -21,10 +21,10 @@ public class ChatFormat {
     private final String clickType;
     private final String clickValue;
 
-    public ChatFormat(ConfigurationSection section, CustomChat plugin) {
+    public ChatFormat(String sectionName, ConfigurationSection section, CustomChat plugin) {
         this.plugin = plugin;
 
-        this.permission = section.getString("permission", "");
+        this.permission = "customchat.format."+sectionName;
         this.display = section.getString("display", "{displayName}");
         this.twoPoints = section.getString("two_points", "&8: ");
         this.messageFormat = section.getString("message", "&7{message}");
@@ -53,14 +53,14 @@ public class ChatFormat {
             message = message.replaceAll("&[0-9a-fk-orA-FK-OR]", "");
             message = message.replaceAll("<[^>]*>", "");
         } else {
-            if (plugin.getConfig().getBoolean("block_k")) {
-                message = message.replaceAll("&k", "");
-                message = message.replaceAll("<obf>", "");
-                player.sendMessage(plugin.deserialize(plugin.getConfig().getString("messages.block_k", "&cYou cannot use &k in chat messages.")));
-            }
-
             if (!player.hasPermission("customchat.changeformat")) {
                 message = message.replaceAll("&[lkmnorLKMNOR]|</?(?i:obf|bold|st|u|i|reset|b)>", "");
+            } else if (message.contains("&k") || message.contains("<obf>")) {
+                if (plugin.getConfig().getBoolean("block_k")) {
+                    message = message.replaceAll("(?i)&k", "");
+                    message = message.replaceAll("(?i)</?obf>", "");
+                    player.sendMessage(plugin.getMessage("k_blocked"));
+                }
             }
 
             if (message.contains("&") || (message.contains("<") && message.contains(">"))) {

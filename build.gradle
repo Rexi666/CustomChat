@@ -1,10 +1,11 @@
 plugins {
     id 'java'
     id("xyz.jpenilla.run-paper") version "2.3.1"
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
 group = 'org.rexi'
-version = '1.0'
+version = '1.1'
 
 repositories {
     mavenCentral()
@@ -20,6 +21,7 @@ repositories {
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT")
     compileOnly 'me.clip:placeholderapi:2.11.6'
+    implementation 'org.bstats:bstats-bukkit:3.0.2'
 }
 
 tasks {
@@ -29,6 +31,10 @@ tasks {
         // Your plugin's jar (or shadowJar if present) will be used automatically.
         minecraftVersion("1.18")
     }
+}
+
+shadowJar {
+    relocate 'org.bstats', 'org.rexi.shadow.bstats'
 }
 
 def targetJavaVersion = 17

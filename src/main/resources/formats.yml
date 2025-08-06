@@ -1,0 +1,38 @@
+formats:
+  # Higher priority formats will override lower ones. Top ones are checked first.
+  staff:
+    # display name of the format
+    display: "%luckperms_prefix% &f{displayName} %luckperms_suffix%"
+    two_points: "&8»"
+    # The color of the message sent. Can use color codes or minimessage, including gradients <gradient:#HEX1:#HEX2>
+    message: "&f{message}"
+    # Message that appears when hovering over the message
+    hover:
+      message:
+        - ' &8&m───────────────'
+        - ' &f💬 &7Server Staff &f💬'
+        - ' &8&m───────────────'
+        - ' &eℹ Information:'
+        - '    &7Name: &r&f{displayName}'
+        - '    &7Rank: %luckperms_prefix%'
+        - '    &7Money: %vault_eco_balance_formatted%$'
+        - ' &8&m───────────────'
+      # The command to run when clicking the message
+      click_action:
+        # Types: "run_command", "suggest_command", "open_url"
+        type: "suggest_command"
+        value: "/msg {displayName}"
+  default: # chatcolor.format.default given by default
+    display: "&7{displayName} %luckperms_suffix%"
+    two_points: "&8»"
+    message: "<gray>{message}"
+    hover:
+      message:
+        - ' &8&m───────────────'
+        - ' &eℹ Information:'
+        - '    &7Name: &r&f{displayName}'
+        - '    &7Money: %vault_eco_balance_formatted%$'
+        - ' &8&m───────────────'
+      click_action:
+        type: "suggest_command"
+        value: "/msg {displayName}"
