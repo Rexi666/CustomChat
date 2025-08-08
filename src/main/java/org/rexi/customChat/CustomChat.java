@@ -25,6 +25,7 @@ public final class CustomChat extends JavaPlugin {
 
     private ConfigFile messagesFile;
     private ConfigFile formatsFile;
+    private ConfigFile configFile;
     private UpdateChecker updateChecker;
 
     @Override
@@ -50,6 +51,8 @@ public final class CustomChat extends JavaPlugin {
 
         int pluginId = 26809; // Reemplaza con el ID real de tu plugin en bStats
         Metrics metrics = new Metrics(this, pluginId);
+
+        configFile.checkConfigVersion();
 
         getServer().getConsoleSender().sendMessage(Component.text("CustomChat plugin has been enabled!").color(NamedTextColor.GREEN));
         getServer().getConsoleSender().sendMessage(Component.text("Thank you for using Rexi666 plugins :D").color(NamedTextColor.BLUE));

@@ -1,1 +1,12 @@
+config_version: 2
+
 block_k: true #Block &k in chat messages, preventing players from using the magic formatting code.
+
+database:
+    type: sqlite #Database type, can be 'sqlite' or 'mysql'.
+    mysql: #MySQL configuration. Only modify if using MySQL.
+      host: "localhost" #MySQL host address.
+      port: 3306 #MySQL port number.
+      database: "customchat" #MySQL database name.
+      username: "root" #MySQL username.
+      password: "" #MySQL password.
