@@ -40,6 +40,7 @@ Designed for performance and flexibility, CustomChat supports both legacy and mo
 | `customchat.format.<format>` | Allows usage of the specified chat format |
 | `customchat.changecolor`     | Allows changing color of own messages     |
 | `customchat.changeformat`    | Allows changing format of own messages    |
+| `customchat.chatcolor`       | Allows access to /chatcolor               |
 
 ---
 

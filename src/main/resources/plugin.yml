@@ -6,8 +6,11 @@ author: Rexi666
 depend: [PlaceholderAPI]
 commands:
   customchat:
-    description: Principal command for CustomChat plugin
+    description: Main command for CustomChat plugin
     aliases: [cc]
+  chatcolor:
+    description: Opens the chat color menu
+    aliases: [colorchat]
 permissions:
   customchat.format.default:
     description: Default format permission

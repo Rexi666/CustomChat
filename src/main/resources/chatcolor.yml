@@ -1,0 +1,110 @@
+# chatcolor command, allows players to decide the color of their chat messages.
+# Players need customchat.colorchat.color.<color> permission to use a specific color.
+# And customchat.colorchat.gradient.<gradient> for gradients.
+chatcolor:
+  enabled: true
+  gradients_enabled: true
+  colors:
+    material: POTION
+    name: "&cChat Color (Colors)"
+    colors:
+      black:
+        material: BLACK_DYE # Material used for the color item in the menu
+        name: "&0Black" # Display name of the item in the menu. You can use color codes or minimessage here.
+        chatcolor: "&0" # Supports legacy color codes and minimessage
+      dark_blue:
+        material: BLUE_DYE
+        name: "&1Dark Blue"
+        chatcolor: "&1"
+      dark_green:
+        material: GREEN_DYE
+        name: "&2Dark Green"
+        chatcolor: "&2"
+      dark_aqua:
+        material: LIGHT_BLUE_DYE
+        name: "&3Dark Aqua"
+        chatcolor: "&3"
+      dark_red:
+        material: RED_DYE
+        name: "&4Dark Red"
+        chatcolor: "&4"
+      dark_purple:
+        material: PURPLE_DYE
+        name: "&5 Dark Purple"
+        chatcolor: "&5"
+      gold:
+        material: ORANGE_DYE
+        name: "&6Gold"
+        chatcolor: "&6"
+      gray:
+        material: LIGHT_GRAY_DYE
+        name: "&7Gray"
+        chatcolor: "&7"
+      dark_gray:
+        material: GRAY_DYE
+        name: "&8Dark Gray"
+        chatcolor: "&8"
+      blue:
+        material: BLUE_DYE
+        name: "&9Blue"
+        chatcolor: "&9"
+      green:
+        material: LIME_DYE
+        name: "&aGreen"
+        chatcolor: "&a"
+      aqua:
+        material: LIGHT_BLUE_DYE
+        name: "&bAqua"
+        chatcolor: "&b"
+      red:
+        material: RED_DYE
+        name: "&cRed"
+        chatcolor: "&c"
+      light_purple:
+        material: PINK_DYE
+        name: "&dLight Purple"
+        chatcolor: "&d"
+      yellow:
+        material: YELLOW_DYE
+        name: "&eYellow"
+        chatcolor: "&e"
+      white:
+        material: WHITE_DYE
+        name: "&fWhite"
+        chatcolor: "&f"
+  gradients: # You can define custom gradients here. #HEX1:HEX2
+    material: ENCHANTING_TABLE # Material used for the gradient item in the menu
+    name: "&cChat Color (Gradients)"
+    colors:
+      christmas:
+        material: ENCHANTING_TABLE
+        name: "<gradient:#E82400:#44B000> Christmas"
+        color: "#E82400:#44B000" # Red to Green gradient
+      rainbow:
+        material: ENCHANTING_TABLE
+        name: "<gradient:#FF0000:#FF7F00:#FFFF00:#00FF00:#00EEFF:#003CFF:#B300FF><bold> Rainbow"
+        color: "#FF0000:#FF7F00:#FFFF00:#00FF00:#00EEFF:#003CFF:#B300FF" # Rainbow gradient
+menu:
+  main:
+    title: "&eChat Color Menu"
+    lore_color:
+      - ""
+      - "&eClick to open the color menu."
+    lore_gradient:
+      - ""
+      - "&eClick to open the gradient menu."
+  submenus:
+    submenu_color-title: "&eChat Color (Colors)"
+    lore_color-unlocked:
+      - ""
+      - "&eClick to select this color."
+    lore_color-blocked:
+      - ""
+      - "&cYou do not have permission to use this color."
+    submenu_gradient-title: "&eChat Color (Gradients)"
+    lore_gradient-unlocked:
+      - ""
+      - "&eClick to select this gradient."
+    lore_gradient-blocked:
+      - ""
+      - "&cYou do not have permission to use this gradient."

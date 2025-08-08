@@ -62,18 +62,11 @@ public class ChatFormat {
                     player.sendMessage(plugin.getMessage("k_blocked"));
                 }
             }
-
-            if (message.contains("&") || (message.contains("<") && message.contains(">"))) {
-                customColor = true;
-            }
         }
 
-        String formatted;
-        if (!customColor) {
-            formatted = messageFormat.replace("{message}", message);
-        } else {
-            formatted = message;
-        }
+        String chatColor = plugin.getPlayerChatColor(player);
+
+        String formatted = messageFormat.replace("{message}", message).replace("{chatcolor}", chatColor);
         String withPlaceholders = PlaceholderAPI.setPlaceholders(player, formatted);
         return plugin.deserialize(withPlaceholders);
     }

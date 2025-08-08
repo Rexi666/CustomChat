@@ -5,26 +5,29 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bstats.bukkit.Metrics;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.rexi.customChat.commands.ChatColorCommand;
 import org.rexi.customChat.commands.CustomchatCommand;
 import org.rexi.customChat.config.ChatFormat;
 import org.rexi.customChat.listeners.LegacyChatListener;
 import org.rexi.customChat.listeners.NewChatListener;
+import org.rexi.customChat.menus.ChatColorMenu;
 import org.rexi.customChat.utils.ConfigFile;
 import org.rexi.customChat.utils.UpdateChecker;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public final class CustomChat extends JavaPlugin {
     private Map<String, ChatFormat> formats;
+    private final Map<UUID, String> playerChatColor = new HashMap<>();
 
     private ConfigFile messagesFile;
     private ConfigFile formatsFile;
+    private ConfigFile chatcolorFile;
     private ConfigFile configFile;
     private UpdateChecker updateChecker;
 
@@ -33,6 +36,8 @@ public final class CustomChat extends JavaPlugin {
         saveDefaultConfig();
         messagesFile = new ConfigFile(this, "messages.yml");
         formatsFile = new ConfigFile(this, "formats.yml");
+        chatcolorFile = new ConfigFile(this, "chatcolor.yml");
+        configFile = new ConfigFile(this, "config.yml");
         loadFormats();
         if (hasClass("io.papermc.paper.event.player.AsyncChatEvent")) {
             getServer().getPluginManager().registerEvents(new NewChatListener(this), this);
@@ -48,6 +53,8 @@ public final class CustomChat extends JavaPlugin {
         updateChecker.checkForUpdates();
 
         getCommand("customchat").setExecutor(new CustomchatCommand(this, updateChecker));
+
+        getCommand("chatcolor").setExecutor(new ChatColorCommand(this));
 
         int pluginId = 26809; // Reemplaza con el ID real de tu plugin en bStats
         Metrics metrics = new Metrics(this, pluginId);
@@ -133,6 +140,22 @@ public final class CustomChat extends JavaPlugin {
         reloadConfig();
         messagesFile.reload();
         formatsFile.reload();
+        chatcolorFile.reload();
         loadFormats();
+    }
+
+    public void setPlayerChatColor(Player player, String colorCode) {
+        playerChatColor.put(player.getUniqueId(), colorCode);
+    }
+
+    public String getPlayerChatColor(Player player) {
+        return playerChatColor.getOrDefault(player.getUniqueId(), "");
+    }
+
+    public String getChatColorString(String path) {
+        return chatcolorFile.getConfig().getString(path);
+    }
+    public List<String> getChatColorList(String path) {
+        return chatcolorFile.getConfig().getStringList(path);
     }
 }

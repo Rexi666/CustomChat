@@ -5,3 +5,4 @@ messages:
   k_blocked: "&cYou cannot use the format k in chat messages."
   new_version_available: "&eA new version of CustomChat is available! &b{current_version} &e-> &b{new_version}. &eDownload it at &b{url]}"
   latest_version: "&aYou are using the latest version of CustomChat! &b{version}"
+  noconsole: "&cThis command can only be used by players."
