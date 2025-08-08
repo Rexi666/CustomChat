@@ -16,7 +16,7 @@ public class ChatFormat {
     private final String permission;
     private final String display;
     private final String twoPoints;
-    private final String messageFormat;
+    private final String format;
     private final List<String> hover;
     private final String clickType;
     private final String clickValue;
@@ -27,7 +27,7 @@ public class ChatFormat {
         this.permission = "customchat.format."+sectionName;
         this.display = section.getString("display", "{displayName}");
         this.twoPoints = section.getString("two_points", "&8: ");
-        this.messageFormat = section.getString("message", "&7{message}");
+        this.format = section.getString("format", "{message}");
         this.hover = section.getStringList("hover.message");
         this.clickType = section.getString("hover.click_action.type", "none");
         this.clickValue = section.getString("hover.click_action.value", "");
@@ -62,11 +62,20 @@ public class ChatFormat {
                     player.sendMessage(plugin.getMessage("k_blocked"));
                 }
             }
+            if (message.contains("&") || (message.contains("<") && message.contains(">"))) {
+                customColor = true;
+            }
         }
 
         String chatColor = plugin.getPlayerChatColor(player);
-
-        String formatted = messageFormat.replace("{message}", message).replace("{chatcolor}", chatColor);
+        String formatted;
+        if (customColor) {
+            formatted = message;
+        } else if (!chatColor.isEmpty()) {
+            formatted = chatColor+message;
+        } else {
+            formatted = format+message;
+        }
         String withPlaceholders = PlaceholderAPI.setPlaceholders(player, formatted);
         return plugin.deserialize(withPlaceholders);
     }

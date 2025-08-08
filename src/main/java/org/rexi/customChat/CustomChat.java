@@ -14,8 +14,8 @@ import org.rexi.customChat.commands.ChatColorCommand;
 import org.rexi.customChat.commands.CustomchatCommand;
 import org.rexi.customChat.config.ChatFormat;
 import org.rexi.customChat.listeners.LegacyChatListener;
+import org.rexi.customChat.listeners.MenuListener;
 import org.rexi.customChat.listeners.NewChatListener;
-import org.rexi.customChat.menus.ChatColorMenu;
 import org.rexi.customChat.utils.ConfigFile;
 import org.rexi.customChat.utils.UpdateChecker;
 
@@ -24,6 +24,9 @@ import java.util.*;
 public final class CustomChat extends JavaPlugin {
     private Map<String, ChatFormat> formats;
     private final Map<UUID, String> playerChatColor = new HashMap<>();
+
+    public final Map<Integer, String> colorItems = new HashMap<>();
+    public final Map<Integer, String> gradientItems = new HashMap<>();
 
     private ConfigFile messagesFile;
     private ConfigFile formatsFile;
@@ -55,6 +58,7 @@ public final class CustomChat extends JavaPlugin {
         getCommand("customchat").setExecutor(new CustomchatCommand(this, updateChecker));
 
         getCommand("chatcolor").setExecutor(new ChatColorCommand(this));
+        getServer().getPluginManager().registerEvents(new MenuListener(this), this);
 
         int pluginId = 26809; // Reemplaza con el ID real de tu plugin en bStats
         Metrics metrics = new Metrics(this, pluginId);
@@ -157,5 +161,8 @@ public final class CustomChat extends JavaPlugin {
     }
     public List<String> getChatColorList(String path) {
         return chatcolorFile.getConfig().getStringList(path);
+    }
+    public FileConfiguration getChatColorConfig() {
+        return chatcolorFile.getConfig();
     }
 }

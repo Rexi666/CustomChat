@@ -5,7 +5,7 @@ chatcolor:
   enabled: true
   gradients_enabled: true
   colors:
-    material: POTION
+    material: OAK_SIGN
     name: "&cChat Color (Colors)"
     colors:
       black:
@@ -21,7 +21,7 @@ chatcolor:
         name: "&2Dark Green"
         chatcolor: "&2"
       dark_aqua:
-        material: LIGHT_BLUE_DYE
+        material: CYAN_DYE
         name: "&3Dark Aqua"
         chatcolor: "&3"
       dark_red:
@@ -72,18 +72,18 @@ chatcolor:
         material: WHITE_DYE
         name: "&fWhite"
         chatcolor: "&f"
-  gradients: # You can define custom gradients here. #HEX1:HEX2
+  gradients: # You can define custom gradients here. <gradient:#HEX1:HEX2>
     material: ENCHANTING_TABLE # Material used for the gradient item in the menu
     name: "&cChat Color (Gradients)"
     colors:
       christmas:
         material: ENCHANTING_TABLE
         name: "<gradient:#E82400:#44B000> Christmas"
-        color: "#E82400:#44B000" # Red to Green gradient
+        color: "<gradient:#E82400:#44B000>" # Red to Green gradient
       rainbow:
         material: ENCHANTING_TABLE
         name: "<gradient:#FF0000:#FF7F00:#FFFF00:#00FF00:#00EEFF:#003CFF:#B300FF><bold> Rainbow"
-        color: "#FF0000:#FF7F00:#FFFF00:#00FF00:#00EEFF:#003CFF:#B300FF" # Rainbow gradient
+        color: "<gradient:#FF0000:#FF7F00:#FFFF00:#00FF00:#00EEFF:#003CFF:#B300FF>" # Rainbow gradient
 menu:
   main:
     title: "&eChat Color Menu"

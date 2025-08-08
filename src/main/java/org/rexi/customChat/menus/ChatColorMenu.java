@@ -1,20 +1,19 @@
 package org.rexi.customChat.menus;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.rexi.customChat.CustomChat;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-public class ChatColorMenu implements Listener {
+public class ChatColorMenu{
 
     private final CustomChat plugin;
     private final Player player;
@@ -22,38 +21,102 @@ public class ChatColorMenu implements Listener {
     public ChatColorMenu(CustomChat plugin, Player player) {
         this.plugin = plugin;
         this.player = player;
-        Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
     public void openMainMenu() {
         Inventory inv = Bukkit.createInventory(null, 27, plugin.deserialize(plugin.getChatColorString("menu.main.title")));
 
-        ItemStack colors = createItem(Material.valueOf(plugin.getChatColorString("chatcolor.colors.material")), plugin.deserialize(plugin.getChatColorString("chatcolor.colors.name")), plugin.getChatColorList("menu.main.lore_color"));
-        ItemStack gradients = createItem(Material.valueOf(plugin.getChatColorString("chatcolor.gradients.material")), plugin.deserialize(plugin.getChatColorString("chatcolor.gradients.name")), plugin.getChatColorList("menu.main.lore_gradient"));
+        ItemStack colors = createItem(
+                Material.valueOf(plugin.getChatColorString("chatcolor.colors.material")),
+                plugin.deserialize(plugin.getChatColorString("chatcolor.colors.name")),
+                plugin.getChatColorList("menu.main.lore_color"),
+                1001
+        );
 
-        inv.setItem(11, colors);
-        inv.setItem(15, gradients);
+        ItemStack gradients = createItem(
+                Material.valueOf(plugin.getChatColorString("chatcolor.gradients.material")),
+                plugin.deserialize(plugin.getChatColorString("chatcolor.gradients.name")),
+                plugin.getChatColorList("menu.main.lore_gradient"),
+                1002
+        );
+
+        if (plugin.getChatColorConfig().getBoolean("chatcolor.gradients_enabled")) {
+            inv.setItem(11, colors);
+            inv.setItem(15, gradients);
+        } else {
+            inv.setItem(13, colors);
+        }
 
         player.openInventory(inv);
     }
 
-    private ItemStack createItem(Material material, net.kyori.adventure.text.Component name, List<String> lore) {
+    public void openColorSubMenu() {
+        ConfigurationSection colorsSection = plugin.getChatColorConfig().getConfigurationSection("chatcolor.colors.colors");
+        if (colorsSection == null) return;
+
+        Inventory inv = Bukkit.createInventory(null, 54, plugin.deserialize(plugin.getChatColorString("menu.submenus.submenu_color-title")));
+
+        int custommodeldata = 10001;
+        for (String key : colorsSection.getKeys(false)) {
+            String permission = "customchat.colorchat.color." + key;
+            boolean hasPermission = player.hasPermission(permission);
+            Material material = Material.valueOf(colorsSection.getString(key + ".material"));
+            Component name = plugin.deserialize(colorsSection.getString(key + ".name"));
+            List<String> lorePath = plugin.getChatColorList(hasPermission ? "menu.submenus.lore_color-unlocked" : "menu.submenus.lore_color-blocked");
+
+            ItemStack item = createItem(material, name, lorePath, custommodeldata);
+            inv.addItem(item);
+
+            plugin.colorItems.put(custommodeldata, key);
+
+            custommodeldata++;
+        }
+
+        player.openInventory(inv);
+    }
+
+    public void openGradientSubMenu() {
+        ConfigurationSection gradientsSection = plugin.getChatColorConfig().getConfigurationSection("chatcolor.gradients.colors");
+        if (gradientsSection == null) return;
+
+        Inventory inv = Bukkit.createInventory(null, 54, plugin.deserialize(plugin.getChatColorString("menu.submenus.submenu_gradient-title")));
+
+        int custommodeldata = 10001;
+        for (String key : gradientsSection.getKeys(false)) {
+            String permission = "customchat.colorchat.gradient." + key;
+            boolean hasPermission = player.hasPermission(permission);
+            Material material = Material.valueOf(gradientsSection.getString(key + ".material"));
+            Component name = plugin.deserialize(gradientsSection.getString(key + ".name"));
+            List<String> lorePath = plugin.getChatColorList(hasPermission ? "menu.submenus.lore_gradient-unlocked" : "menu.submenus.lore_gradient-blocked");
+
+            ItemStack item = createItem(material, name, lorePath, custommodeldata);
+            inv.addItem(item);
+
+            plugin.gradientItems.put(custommodeldata, key);
+
+            custommodeldata++;
+        }
+
+        player.openInventory(inv);
+    }
+
+    private ItemStack createItem(Material material, Component name, List<String> lore, int customModelData) {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
 
-        meta.displayName(name);
-        List<net.kyori.adventure.text.Component> loreLines = new ArrayList<>();
+        meta.displayName(name.decoration(TextDecoration.ITALIC, false));
+
+        List<Component> loreLines = new ArrayList<>();
         for (String line : lore) {
-            loreLines.add(plugin.deserialize(line));
+            loreLines.add(plugin.deserialize(line).decoration(TextDecoration.ITALIC, false));
         }
         meta.lore(loreLines);
 
+        if (customModelData != -1) {
+            meta.setCustomModelData(customModelData);
+        }
+
         item.setItemMeta(meta);
         return item;
-    }
-
-    @EventHandler
-    public void onClick(InventoryClickEvent event) {
-        // Aquí puedes añadir lógica de detección de clics en los ítems y abrir submenús, guardar colores, etc.
     }
 }

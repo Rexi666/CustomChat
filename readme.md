@@ -27,20 +27,23 @@ Designed for performance and flexibility, CustomChat supports both legacy and mo
 
 ## 📦 Commands
 
-| Command               | Description                 | Permission                |
-|-----------------------|-----------------------------|---------------------------|
-| `/customchat reload`  | Reloads the config file     | `customchat.reload`       |
+| Command              | Description                 | Permission             |
+|----------------------|-----------------------------|------------------------|
+| `/customchat reload` | Reloads the config file     | `customchat.admin`     |
+| `/chatcolor`         | Allows access to /chatcolor | `customchat.chatcolor` |
 
 ---
 
 ## 🔐 Permissions
-| Permission                   | Description                               |
-|------------------------------|-------------------------------------------|
-| `customchat.admin`           | Allows access to /customchat reload       |
-| `customchat.format.<format>` | Allows usage of the specified chat format |
-| `customchat.changecolor`     | Allows changing color of own messages     |
-| `customchat.changeformat`    | Allows changing format of own messages    |
-| `customchat.chatcolor`       | Allows access to /chatcolor               |
+| Permission                                 | Description                                       |
+|--------------------------------------------|---------------------------------------------------|
+| `customchat.admin`                         | Allows access to /customchat reload               |
+| `customchat.format.<format>`               | Allows usage of the specified chat format         |
+| `customchat.changecolor`                   | Allows changing color of own messages             |
+| `customchat.changeformat`                  | Allows changing format of own messages            |
+| `customchat.chatcolor`                     | Allows access to /chatcolor                       |
+| `customchat.colorchat.color.<color>`       | Allows access to a specific color in colorchat    |
+| `customchat.colorchat.gradient.<gradient>` | Allows access to a specific gradient in colorchat |
 
 ---
 
