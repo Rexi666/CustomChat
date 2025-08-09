@@ -5,7 +5,6 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bstats.bukkit.Metrics;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -13,12 +12,15 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.rexi.customChat.commands.ChatColorCommand;
 import org.rexi.customChat.commands.CustomchatCommand;
 import org.rexi.customChat.config.ChatFormat;
+import org.rexi.customChat.database.DatabaseManager;
+import org.rexi.customChat.listeners.ColorChatListener;
 import org.rexi.customChat.listeners.LegacyChatListener;
 import org.rexi.customChat.listeners.MenuListener;
 import org.rexi.customChat.listeners.NewChatListener;
 import org.rexi.customChat.utils.ConfigFile;
 import org.rexi.customChat.utils.UpdateChecker;
 
+import java.sql.SQLException;
 import java.util.*;
 
 public final class CustomChat extends JavaPlugin {
@@ -33,6 +35,7 @@ public final class CustomChat extends JavaPlugin {
     private ConfigFile chatcolorFile;
     private ConfigFile configFile;
     private UpdateChecker updateChecker;
+    private DatabaseManager databaseManager;
 
     @Override
     public void onEnable() {
@@ -41,6 +44,17 @@ public final class CustomChat extends JavaPlugin {
         formatsFile = new ConfigFile(this, "formats.yml");
         chatcolorFile = new ConfigFile(this, "chatcolor.yml");
         configFile = new ConfigFile(this, "config.yml");
+
+        databaseManager = new DatabaseManager(this);
+        try {
+            databaseManager.connect();
+        } catch (SQLException e) {
+            getLogger().severe("Could not connect to database: " + e.getMessage());
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+        getServer().getPluginManager().registerEvents(new ColorChatListener(this), this);
+
         loadFormats();
         if (hasClass("io.papermc.paper.event.player.AsyncChatEvent")) {
             getServer().getPluginManager().registerEvents(new NewChatListener(this), this);
@@ -57,6 +71,7 @@ public final class CustomChat extends JavaPlugin {
 
         getCommand("customchat").setExecutor(new CustomchatCommand(this, updateChecker));
 
+        setMenuItems();
         getCommand("chatcolor").setExecutor(new ChatColorCommand(this));
         getServer().getPluginManager().registerEvents(new MenuListener(this), this);
 
@@ -100,6 +115,10 @@ public final class CustomChat extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        if (databaseManager != null) {
+            databaseManager.close();
+        }
+
         getServer().getConsoleSender().sendMessage(Component.text("CustomChat plugin has been disabled!").color(NamedTextColor.RED));
         getServer().getConsoleSender().sendMessage(Component.text("Thank you for using Rexi666 plugins :D").color(NamedTextColor.BLUE));
     }
@@ -150,10 +169,23 @@ public final class CustomChat extends JavaPlugin {
 
     public void setPlayerChatColor(Player player, String colorCode) {
         playerChatColor.put(player.getUniqueId(), colorCode);
+        try {
+            databaseManager.setPlayerColor(player.getUniqueId().toString(), colorCode);
+        } catch (SQLException e) {
+            getLogger().severe("Failed to save player chat color on the database: " + e.getMessage());
+        }
     }
 
     public String getPlayerChatColor(Player player) {
-        return playerChatColor.getOrDefault(player.getUniqueId(), "");
+        return playerChatColor.get(player.getUniqueId());
+    }
+    public void getPlayerChatColorFromDB(Player player) {
+        try {
+            String color = databaseManager.getPlayerColor(player.getUniqueId().toString());
+            playerChatColor.put(player.getUniqueId(), color);
+        } catch (SQLException e) {
+            getLogger().severe("Failed to load player chat color on the database: " + e.getMessage());
+        }
     }
 
     public String getChatColorString(String path) {
@@ -164,5 +196,67 @@ public final class CustomChat extends JavaPlugin {
     }
     public FileConfiguration getChatColorConfig() {
         return chatcolorFile.getConfig();
+    }
+
+    public void addConfig(String path, String key) {
+        configFile.getConfig().set(path, key);
+        configFile.save();
+    }
+
+    public void addConfigINT(String path, int key) {
+        configFile.getConfig().set(path, key);
+        configFile.save();
+    }
+
+    public void addMessage(String path, String message) {
+        messagesFile.getConfig().set("messages." + path, message);
+        messagesFile.save();
+    }
+
+    public void changeMessagetoFormat() {
+        FileConfiguration config = formatsFile.getConfig();
+        ConfigurationSection section = config.getConfigurationSection("formats");
+        if (section != null) {
+            for (String key : section.getKeys(false)) {
+                String message = section.getString(key + ".message", "&f");
+                // quitar el {message}
+                message = message.replace("{message}", "");
+
+                // guardar en format
+                config.set("formats."+key + ".format", message);
+
+                // borrar la clave antigua
+                config.set("formats."+key + ".message", null);
+            }
+            // guardar el archivo
+            formatsFile.save();
+        }
+    }
+
+    public void setMenuItems() {
+
+        // colores
+        ConfigurationSection colorsSection = getChatColorConfig().getConfigurationSection("chatcolor.colors.colors");
+        if (colorsSection == null) return;
+
+        int custommodeldata_colors = 10001;
+        for (String key : colorsSection.getKeys(false)) {
+
+            colorItems.put(custommodeldata_colors, key);
+
+            custommodeldata_colors++;
+        }
+
+        // gradientes
+        ConfigurationSection gradientsSection = getChatColorConfig().getConfigurationSection("chatcolor.gradients.colors");
+        if (gradientsSection == null) return;
+
+        int custommodeldata_gradients = 10001;
+        for (String key : gradientsSection.getKeys(false)) {
+
+            gradientItems.put(custommodeldata_gradients, key);
+
+            custommodeldata_gradients++;
+        }
     }
 }

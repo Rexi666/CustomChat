@@ -2,7 +2,6 @@ package org.rexi.customChat.utils;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.rexi.customChat.CustomChat;
 
 import java.io.File;
@@ -45,18 +44,22 @@ public class ConfigFile {
     // Config version check
     public void checkConfigVersion() {
         if (!config.contains("config_version") || config.getInt("config_version") < 2) {
-            config.addDefault("config_version", 2);
+            plugin.addConfigINT("config_version", 2);
 
             // añadidos
-            config.addDefault("database.type", "sqlite");
-            config.addDefault("database.mysql.host", "localhost");
-            config.addDefault("database.mysql.port", 3306);
-            config.addDefault("database.mysql.database", "customchat");
-            config.addDefault("database.mysql.username", "root");
-            config.addDefault("database.mysql.password", "");
+            plugin.addConfig("database.type", "sqlite");
+            plugin.addConfig("database.mysql.host", "localhost");
+            plugin.addConfigINT("database.mysql.port", 3306);
+            plugin.addConfig("database.mysql.database", "customchat");
+            plugin.addConfig("database.mysql.username", "root");
+            plugin.addConfig("database.mysql.password", "");
 
-            config.options().copyDefaults(true);
-            plugin.saveConfig();
+            plugin.addMessage("noconsole", "&cThis command can only be used by players.");
+            plugin.addMessage("color_selected", "&aYou have selected the color &b{color} &afor your chat messages.");
+            plugin.addMessage("no_permission_color", "&cYou do not have permission to use the color &b{color}");
+
+            plugin.changeMessagetoFormat();
+
             plugin.reloadAllConfigs();
         }
     }

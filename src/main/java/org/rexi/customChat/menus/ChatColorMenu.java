@@ -67,8 +67,6 @@ public class ChatColorMenu{
             ItemStack item = createItem(material, name, lorePath, custommodeldata);
             inv.addItem(item);
 
-            plugin.colorItems.put(custommodeldata, key);
-
             custommodeldata++;
         }
 
@@ -91,8 +89,6 @@ public class ChatColorMenu{
 
             ItemStack item = createItem(material, name, lorePath, custommodeldata);
             inv.addItem(item);
-
-            plugin.gradientItems.put(custommodeldata, key);
 
             custommodeldata++;
         }

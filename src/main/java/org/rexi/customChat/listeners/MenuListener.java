@@ -56,6 +56,7 @@ public class MenuListener implements Listener {
                     p.closeInventory();
                 } else {
                     p.sendMessage(plugin.getMessage("no_permission_color", "{color}", key));
+                    p.closeInventory();
                 }
             }
         } else if (currentTitle.equals(gradientstitle)) {
@@ -77,10 +78,9 @@ public class MenuListener implements Listener {
                     p.closeInventory();
                 } else {
                     p.sendMessage(plugin.getMessage("no_permission_color", "{color}", key));
+                    p.closeInventory();
                 }
             }
-        } else {
-            return;
         }
     }
 }

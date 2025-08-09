@@ -78,12 +78,20 @@ chatcolor:
     colors:
       christmas:
         material: ENCHANTING_TABLE
-        name: "<gradient:#E82400:#44B000> Christmas"
+        name: "<gradient:#E82400:#44B000>Christmas"
         color: "<gradient:#E82400:#44B000>" # Red to Green gradient
       rainbow:
         material: ENCHANTING_TABLE
-        name: "<gradient:#FF0000:#FF7F00:#FFFF00:#00FF00:#00EEFF:#003CFF:#B300FF><bold> Rainbow"
+        name: "<gradient:#FF0000:#FF7F00:#FFFF00:#00FF00:#00EEFF:#003CFF:#B300FF><bold>Rainbow"
         color: "<gradient:#FF0000:#FF7F00:#FFFF00:#00FF00:#00EEFF:#003CFF:#B300FF>" # Rainbow gradient
+      sunset:
+        material: ENCHANTING_TABLE
+        name: "<gradient:#FF4500:#FFD700:#FF6347>Sunset"
+        color: "<gradient:#FF4500:#FFD700:#FF6347>" # Orange to Yellow to Red gradient
+      mystic_sunset:
+        material: ENCHANTING_TABLE
+        name: "<gradient:#C00BD6:#FD2177>Purples"
+        color: "<gradient:#C00BD6:#FD2177>" # Purple to Pink gradient
 menu:
   main:
     title: "&eChat Color Menu"

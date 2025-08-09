@@ -25,6 +25,7 @@ public class CustomchatCommand implements CommandExecutor {
 
         if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
             plugin.reloadAllConfigs();
+            plugin.setMenuItems();
             sender.sendMessage(plugin.getMessage("config_reload"));
             return true;
         }

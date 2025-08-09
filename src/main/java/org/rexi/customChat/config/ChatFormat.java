@@ -27,7 +27,7 @@ public class ChatFormat {
         this.permission = "customchat.format."+sectionName;
         this.display = section.getString("display", "{displayName}");
         this.twoPoints = section.getString("two_points", "&8: ");
-        this.format = section.getString("format", "{message}");
+        this.format = section.getString("format", "&f");
         this.hover = section.getStringList("hover.message");
         this.clickType = section.getString("hover.click_action.type", "none");
         this.clickValue = section.getString("hover.click_action.value", "");
