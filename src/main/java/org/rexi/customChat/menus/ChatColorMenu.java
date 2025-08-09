@@ -40,11 +40,22 @@ public class ChatColorMenu{
                 1002
         );
 
+        ItemStack removecurrent = createItem(
+                plugin.getChatColorString("removecurrent.material"),
+                plugin.deserialize(plugin.getChatColorString("removecurrent.name")),
+                plugin.getChatColorList("removecurrent.lore"),
+                1003
+        );
+
         if (plugin.getChatColorConfig().getBoolean("chatcolor.gradients_enabled")) {
             inv.setItem(11, colors);
             inv.setItem(15, gradients);
         } else {
             inv.setItem(13, colors);
+        }
+
+        if (plugin.getChatColorConfig().getBoolean("removecurrent.enabled")) {
+            inv.setItem(22, removecurrent);
         }
 
         player.openInventory(inv);

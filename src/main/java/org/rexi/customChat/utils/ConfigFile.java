@@ -56,6 +56,7 @@ public class ConfigFile {
 
             plugin.addMessage("noconsole", "&cThis command can only be used by players.");
             plugin.addMessage("color_selected", "&aYou have selected the color &b{color} &afor your chat messages.");
+            plugin.addMessage("color_removed", "&aYou have removed your current chat color.");
             plugin.addMessage("no_permission_color", "&cYou do not have permission to use the color &b{color}");
 
             plugin.changeMessagetoFormat();

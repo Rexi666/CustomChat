@@ -36,6 +36,10 @@ public class MenuListener implements Listener {
                 new ChatColorMenu(plugin, p).openColorSubMenu();
             } else if (custommodeldata == 1002) {
                 new ChatColorMenu(plugin, p).openGradientSubMenu();
+            } else if (custommodeldata == 1003) {
+                plugin.setPlayerChatColor(p, "");
+                p.sendMessage(plugin.getMessage("color_removed"));
+                p.closeInventory();
             }
         } else if (currentTitle.equals(colorstitle)) {
             event.setCancelled(true);
