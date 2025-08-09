@@ -22,6 +22,7 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT")
     compileOnly 'me.clip:placeholderapi:2.11.6'
     implementation 'org.bstats:bstats-bukkit:3.0.2'
+    compileOnly("com.mojang:authlib:1.5.25")
 }
 
 tasks {

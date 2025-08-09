@@ -27,14 +27,14 @@ public class ChatColorMenu{
         Inventory inv = Bukkit.createInventory(null, 27, plugin.deserialize(plugin.getChatColorString("menu.main.title")));
 
         ItemStack colors = createItem(
-                Material.valueOf(plugin.getChatColorString("chatcolor.colors.material")),
+                plugin.getChatColorString("chatcolor.colors.material"),
                 plugin.deserialize(plugin.getChatColorString("chatcolor.colors.name")),
                 plugin.getChatColorList("menu.main.lore_color"),
                 1001
         );
 
         ItemStack gradients = createItem(
-                Material.valueOf(plugin.getChatColorString("chatcolor.gradients.material")),
+                plugin.getChatColorString("chatcolor.gradients.material"),
                 plugin.deserialize(plugin.getChatColorString("chatcolor.gradients.name")),
                 plugin.getChatColorList("menu.main.lore_gradient"),
                 1002
@@ -60,7 +60,7 @@ public class ChatColorMenu{
         for (String key : colorsSection.getKeys(false)) {
             String permission = "customchat.colorchat.color." + key;
             boolean hasPermission = player.hasPermission(permission);
-            Material material = Material.valueOf(colorsSection.getString(key + ".material"));
+            String material = colorsSection.getString(key + ".material");
             Component name = plugin.deserialize(colorsSection.getString(key + ".name"));
             List<String> lorePath = plugin.getChatColorList(hasPermission ? "menu.submenus.lore_color-unlocked" : "menu.submenus.lore_color-blocked");
 
@@ -83,7 +83,7 @@ public class ChatColorMenu{
         for (String key : gradientsSection.getKeys(false)) {
             String permission = "customchat.colorchat.gradient." + key;
             boolean hasPermission = player.hasPermission(permission);
-            Material material = Material.valueOf(gradientsSection.getString(key + ".material"));
+            String material = gradientsSection.getString(key + ".material");
             Component name = plugin.deserialize(gradientsSection.getString(key + ".name"));
             List<String> lorePath = plugin.getChatColorList(hasPermission ? "menu.submenus.lore_gradient-unlocked" : "menu.submenus.lore_gradient-blocked");
 
@@ -96,8 +96,26 @@ public class ChatColorMenu{
         player.openInventory(inv);
     }
 
-    private ItemStack createItem(Material material, Component name, List<String> lore, int customModelData) {
-        ItemStack item = new ItemStack(material);
+    private ItemStack createItem(String material, Component name, List<String> lore, int customModelData) {
+        ItemStack item;
+        if (material.startsWith("basehead-")) {
+            String base64 = material.substring("basehead-".length());
+            try {
+                item = getCustomHead(base64);
+            } catch (Exception ex) {
+                plugin.getLogger().warning("Invalid base64 head for material: " + material);
+                item = new ItemStack(Material.PLAYER_HEAD);
+            }
+        } else {
+            Material mat;
+            try {
+                mat = Material.valueOf(Optional.ofNullable(material).orElse("STONE").toUpperCase());
+            } catch (IllegalArgumentException e) {
+                mat = Material.STONE;
+            }
+            item = new ItemStack(mat);
+        }
+
         ItemMeta meta = item.getItemMeta();
 
         meta.displayName(name.decoration(TextDecoration.ITALIC, false));
@@ -114,5 +132,9 @@ public class ChatColorMenu{
 
         item.setItemMeta(meta);
         return item;
+    }
+
+    public static ItemStack getCustomHead(String base64) {
+        return SkullCreator.itemFromBase64(base64);
     }
 }

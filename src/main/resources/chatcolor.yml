@@ -9,7 +9,7 @@ chatcolor:
     name: "&cChat Color (Colors)"
     colors:
       black:
-        material: BLACK_DYE # Material used for the color item in the menu
+        material: BLACK_DYE # Material used for the color item in the menu. You can use minecraft materials or custom heads base64 (basehead-<base64>), example on gradients.
         name: "&0Black" # Display name of the item in the menu. You can use color codes or minimessage here.
         chatcolor: "&0" # Supports legacy color codes and minimessage
       dark_blue:
@@ -77,20 +77,20 @@ chatcolor:
     name: "&cChat Color (Gradients)"
     colors:
       christmas:
-        material: ENCHANTING_TABLE
+        material: basehead-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTljODlhODg5YzRiYjQyMWVhOWM1NmNiZWFlN2FmMWU2ZDg1ZjRmYWZmMzRhY2JhNzJlMWE4ZDVjNDExNmE4In19fQ==
         name: "<gradient:#E82400:#44B000>Christmas"
         color: "<gradient:#E82400:#44B000>" # Red to Green gradient
       rainbow:
-        material: ENCHANTING_TABLE
+        material: basehead-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzM1NzdkYWM0M2Y0YmQ4YmY0MGJlODczNDJlMmYxNTc2YmViYmRiZjg2ZDdjYmYzYzZiZTY1ZDQ5MjcwOTVjNSJ9fX0=
         name: "<gradient:#FF0000:#FF7F00:#FFFF00:#00FF00:#00EEFF:#003CFF:#B300FF><bold>Rainbow"
-        color: "<gradient:#FF0000:#FF7F00:#FFFF00:#00FF00:#00EEFF:#003CFF:#B300FF>" # Rainbow gradient
+        color: "<gradient:#FF0000:#FF7F00:#FFFF00:#00FF00:#00EEFF:#003CFF:#B300FF><bold>" # Rainbow gradient
       sunset:
-        material: ENCHANTING_TABLE
+        material: basehead-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZWQyZmYwOWNmNmU3OTNjYTg4NzFiNDYwNzBkMWE1ODJmZGMxNmU3YjlmYmE2N2QzYzA4ZjE1YzZlNDdlYjY0NSJ9fX0=
         name: "<gradient:#FF4500:#FFD700:#FF6347>Sunset"
         color: "<gradient:#FF4500:#FFD700:#FF6347>" # Orange to Yellow to Red gradient
       mystic_sunset:
-        material: ENCHANTING_TABLE
-        name: "<gradient:#C00BD6:#FD2177>Purples"
+        material: basehead-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2NjNGUzYTMyZGExZjAyMDU1OTcwMjEwNTUyZTVmMGVkODhlZGE5YjRlNjI5YTNkNTA2ZGNhYjQ3YjBmMjI2ZiJ9fX0=
+        name: "<gradient:#C00BD6:#FD2177>Mystic Sunset"
         color: "<gradient:#C00BD6:#FD2177>" # Purple to Pink gradient
 menu:
   main:
