@@ -27,10 +27,10 @@ Designed for performance and flexibility, CustomChat supports both legacy and mo
 
 ## 📦 Commands
 
-| Command              | Description                 | Permission             |
-|----------------------|-----------------------------|------------------------|
-| `/customchat reload` | Reloads the config file     | `customchat.admin`     |
-| `/chatcolor`         | Allows access to /chatcolor | `customchat.chatcolor` |
+| Command              | Description              | Permission             |
+|----------------------|--------------------------|------------------------|
+| `/customchat reload` | Reloads the config file  | `customchat.admin`     |
+| `/chatcolor`         | Opens the chatcolor menu | `customchat.chatcolor` |
 
 ---
 
