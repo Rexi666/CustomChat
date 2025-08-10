@@ -30,7 +30,7 @@ chatcolor:
         chatcolor: "&4"
       dark_purple:
         material: PURPLE_DYE
-        name: "&5 Dark Purple"
+        name: "&5Dark Purple"
         chatcolor: "&5"
       gold:
         material: ORANGE_DYE

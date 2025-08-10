@@ -54,12 +54,13 @@ public class MenuListener implements Listener {
                 String permission = "customchat.colorchat.color." + key;
 
                 String colorCode = plugin.getChatColorString("chatcolor.colors.colors." + key + ".chatcolor");
+                String name = plugin.getChatColorString("chatcolor.colors.colors." + key + ".name");
                 if (p.hasPermission(permission)) {
                     plugin.setPlayerChatColor(p, colorCode);
                     p.sendMessage(plugin.getMessage("color_selected", "{color}", key));
                     p.closeInventory();
                 } else {
-                    p.sendMessage(plugin.getMessage("no_permission_color", "{color}", key));
+                    p.sendMessage(plugin.getMessage("no_permission_color", "{color}", name));
                     p.closeInventory();
                 }
             }
@@ -76,12 +77,13 @@ public class MenuListener implements Listener {
                 String permission = "customchat.colorchat.gradient." + key;
 
                 String colorCode = plugin.getChatColorString("chatcolor.gradients.colors." + key + ".color");
+                String name = plugin.getChatColorString("chatcolor.gradients.colors." + key + ".name");
                 if (p.hasPermission(permission)) {
                     plugin.setPlayerChatColor(p, colorCode);
                     p.sendMessage(plugin.getMessage("color_selected", "{color}", key));
                     p.closeInventory();
                 } else {
-                    p.sendMessage(plugin.getMessage("no_permission_color", "{color}", key));
+                    p.sendMessage(plugin.getMessage("no_permission_color", "{color}", name));
                     p.closeInventory();
                 }
             }
