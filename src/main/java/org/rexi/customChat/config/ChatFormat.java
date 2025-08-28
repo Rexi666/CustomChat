@@ -71,7 +71,7 @@ public class ChatFormat {
         String formatted;
         if (customColor) {
             formatted = message;
-        } else if (!chatColor.isEmpty()) {
+        } else if (chatColor != null && !chatColor.isEmpty()) {
             formatted = chatColor+message;
         } else {
             formatted = format+message;

@@ -123,19 +123,21 @@ public final class CustomChat extends JavaPlugin {
         getServer().getConsoleSender().sendMessage(Component.text("Thank you for using Rexi666 plugins :D").color(NamedTextColor.BLUE));
     }
 
+    private static final LegacyComponentSerializer LEGACY_HEX_SERIALIZER = LegacyComponentSerializer.builder()
+            .character('&')
+            .hexColors() // Habilita el soporte de hex
+            .useUnusualXRepeatedCharacterHexFormat() // Soporta &x&r&r&g&g&b&b
+            .build();
+
     public Component deserialize(String input) {
-        // Si contiene <...> asumimos que es MiniMessage
         if (input.contains("<") && input.contains(">")) {
             try {
                 return MiniMessage.miniMessage().deserialize(input);
             } catch (Exception e) {
-                // En caso de error, usa como texto plano
                 return Component.text(input);
             }
         }
-
-        // Si no, asumimos que es con códigos &
-        return LegacyComponentSerializer.legacyAmpersand().deserialize(input);
+        return LEGACY_HEX_SERIALIZER.deserialize(input);
     }
 
     private static boolean hasClass(String className) {

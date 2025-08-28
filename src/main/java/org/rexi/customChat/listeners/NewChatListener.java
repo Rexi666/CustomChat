@@ -36,25 +36,38 @@ public class NewChatListener implements Listener {
                 Component twoPoints = format.getTwoPoints();
                 Component content = format.getFormattedMessage(message, player);
 
-                // Construir mensaje completo: display + space + twoPoints + content
-                Component messageComponent = Component.empty()
-                        .append(display)
-                        .append(Component.space())
-                        .append(twoPoints)
-                        .append(Component.space())
-                        .append(content);
-
                 // Hover y click
+                Component hoverText = null;
+                ClickEvent clickEvent = null;
                 if (!format.getHover(player).isEmpty()) {
-                    Component hoverText = Component.join(net.kyori.adventure.text.JoinConfiguration.separator(Component.newline()), format.getHover(player));
-                    messageComponent = messageComponent.hoverEvent(HoverEvent.showText(hoverText));
+                    hoverText = Component.join(
+                            net.kyori.adventure.text.JoinConfiguration.separator(Component.newline()),
+                            format.getHover(player)
+                    );
                 }
 
                 if (!format.getClickType().equals("none")) {
                     ClickEvent.Action action = ClickEvent.Action.valueOf(format.getClickType().toUpperCase());
                     String clickValue = format.getClickValue(player);
-                    messageComponent = messageComponent.clickEvent(ClickEvent.clickEvent(action, clickValue));
+                    clickEvent = ClickEvent.clickEvent(action, clickValue);
                 }
+
+                Component fixedPart = Component.empty()
+                        .append(display)
+                        .append(Component.space())
+                        .append(twoPoints)
+                        .append(Component.space());
+
+                if (hoverText != null) {
+                    fixedPart = fixedPart.hoverEvent(HoverEvent.showText(hoverText));
+                }
+                if (clickEvent != null) {
+                    fixedPart = fixedPart.clickEvent(clickEvent);
+                }
+
+                Component messageComponent = Component.empty()
+                        .append(fixedPart)
+                        .append(content);
 
                 return messageComponent;
             });
