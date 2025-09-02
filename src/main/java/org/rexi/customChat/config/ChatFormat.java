@@ -2,9 +2,17 @@ package org.rexi.customChat.config;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.rexi.customChat.CustomChat;
+import org.rexi.customChat.utils.InventoryManager;
 
 import java.util.List;
 import java.util.Set;
@@ -77,7 +85,20 @@ public class ChatFormat {
             formatted = format+message;
         }
         String withPlaceholders = PlaceholderAPI.setPlaceholders(player, formatted);
-        return plugin.deserialize(withPlaceholders);
+
+        Component finalComponent = plugin.deserialize(withPlaceholders);
+
+        if (withPlaceholders.contains("[item]") && player.hasPermission("customchat.hover.item")) {
+            finalComponent = hoverItem(player, withPlaceholders, customColor, chatColor);
+        }
+        if (withPlaceholders.contains("[inv]") && player.hasPermission("customchat.hover.inv")) {
+            finalComponent = hoverInv(player, withPlaceholders, customColor, chatColor);
+        }
+        if (withPlaceholders.contains("[ender]") && player.hasPermission("customchat.hover.ender")) {
+            finalComponent = hoverEnder(player, withPlaceholders, customColor, chatColor);
+        }
+
+        return finalComponent;
     }
 
     public List<Component> getHover(Player player) {
@@ -96,6 +117,126 @@ public class ChatFormat {
 
     public String getClickValue(Player player) {
         return PlaceholderAPI.setPlaceholders(player, clickValue.replace("{displayName}", player.getName()));
+    }
+
+    private Component hoverItem(Player player, String withPlaceholders, boolean customColor, String chatcolor) {
+        String[] parts = withPlaceholders.split("(?=\\[item\\])|(?<=\\[item\\])");
+        Component finalComponent = Component.empty();
+
+        for (String part : parts) {
+            if (part.equalsIgnoreCase("[item]")) {
+                ItemStack item = player.getInventory().getItemInMainHand();
+                if (item == null || item.getType().isAir()) {
+                    continue;
+                }
+
+                ItemMeta meta = item.getItemMeta();
+
+                // Nombre del ítem (si no tiene displayname, el nombre por defecto)
+                Component baseName = meta != null && meta.hasDisplayName()
+                        ? plugin.deserialize(meta.getDisplayName())
+                        : Component.translatable(item.translationKey());
+
+                // Si cantidad > 1 → "64x Nombre"
+                Component shownName = item.getAmount() > 1
+                        ? Component.text(item.getAmount() + "x ").append(baseName)
+                        : baseName;
+
+                // Hover con nombre, lore y encantamientos
+                Component hover = Component.empty()
+                        .append(shownName);
+
+                if (meta != null) {
+                    boolean more = false;
+                    if (meta.hasEnchants()) {
+                        for (var e : meta.getEnchants().entrySet()) {
+                            String ench = e.getKey().getKey().getKey();
+                            int lvl = e.getValue();
+                            hover = hover.append(Component.newline()).append(Component.text(ench + " " + lvl, TextColor.color(NamedTextColor.GRAY)));
+                        }
+                        more = true;
+                    }
+                    if (meta.hasLore()) {
+                        for (String line : meta.getLore()) {
+                            hover = hover.append(Component.newline()).append(plugin.deserialize(line));
+                        }
+                        more = true;
+                    }
+
+                    if (more) hover = hover.append(Component.newline());
+                    hover = hover.append(Component.newline())
+                            .append(Component.text(item.getType().getKey().toString(), NamedTextColor.DARK_GRAY));
+                }
+
+                Component message = plugin.getMessage("item",
+                        "{item}", PlainTextComponentSerializer.plainText().serialize(shownName));
+
+                Component itemComponent = message.hoverEvent(HoverEvent.showText(hover));
+
+                finalComponent = finalComponent.append(itemComponent);
+            } else {
+                if (customColor) {
+                    finalComponent = finalComponent.append(plugin.deserialize(part));
+                } else if (chatcolor != null && !chatcolor.isEmpty()) {
+                    finalComponent = finalComponent.append(plugin.deserialize(chatcolor + part));
+                } else {
+                    finalComponent = finalComponent.append(plugin.deserialize(format + part));
+                }
+            }
+        }
+        return finalComponent;
+    }
+
+    private Component hoverInv(Player player, String withPlaceholders, boolean customColor, String chatcolor) {
+        String[] parts = withPlaceholders.split("(?=\\[inv\\])|(?<=\\[inv\\])");
+        Component finalComponent = Component.empty();
+
+        for (String part : parts) {
+            if (part.equalsIgnoreCase("[inv]")) {
+                String sha1 = InventoryManager.registerInventory(player);
+
+                Component itemComponent = plugin.getMessage("inv")
+                        .hoverEvent(HoverEvent.showText(plugin.getMessage("inv_hover")))
+                        .clickEvent(ClickEvent.runCommand("/customchat viewinv " + sha1));
+
+                finalComponent = finalComponent.append(itemComponent);
+            } else {
+                if (customColor) {
+                    finalComponent = finalComponent.append(plugin.deserialize(part));
+                } else if (chatcolor != null && !chatcolor.isEmpty()) {
+                    finalComponent = finalComponent.append(plugin.deserialize(chatcolor + part));
+                } else {
+                    finalComponent = finalComponent.append(plugin.deserialize(format + part));
+                }
+            }
+        }
+        return finalComponent;
+    }
+
+    private Component hoverEnder(Player player, String withPlaceholders, boolean customColor, String chatcolor) {
+        String[] parts = withPlaceholders.split("(?=\\[ender\\])|(?<=\\[ender\\])");
+        Component finalComponent = Component.empty();
+
+        for (String part : parts) {
+            if (part.equalsIgnoreCase("[ender]")) {
+                String sha1 = InventoryManager.registerEnderChest(player);
+
+                Component itemComponent = plugin.getMessage("ender")
+                        .hoverEvent(HoverEvent.showText(plugin.getMessage("ender_hover")))
+                        .clickEvent(ClickEvent.runCommand("/customchat viewender " + sha1));
+
+                finalComponent = finalComponent.append(itemComponent);
+            } else {
+                if (customColor) {
+                    finalComponent = finalComponent.append(plugin.deserialize(part));
+                } else if (chatcolor != null && !chatcolor.isEmpty()) {
+                    finalComponent = finalComponent.append(plugin.deserialize(chatcolor + part));
+                } else {
+                    finalComponent = finalComponent.append(plugin.deserialize(format + part));
+                }
+            }
+        }
+        return finalComponent;
     }
 }
 

@@ -101,6 +101,14 @@ removecurrent:
     - ""
     - "&eClick to remove your current chat color."
 
+back:
+  enabled: true
+  material: ARROW
+  name: "&7Back"
+  lore:
+    - ""
+    - "&eClick to go to the previous page"
+
 menu:
   main:
     title: "&eChat Color Menu"

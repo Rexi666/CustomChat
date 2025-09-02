@@ -49,6 +49,11 @@ public class MenuListener implements Listener {
                 custommodeldata = event.getCurrentItem().getItemMeta().getCustomModelData();
             }
 
+            if (custommodeldata == 10500) {
+                p.closeInventory();
+                p.performCommand("colorchat");
+            }
+
             if (plugin.colorItems.containsKey(custommodeldata)) {
                 String key = plugin.colorItems.get(custommodeldata);
                 String permission = "customchat.colorchat.color." + key;
@@ -70,6 +75,11 @@ public class MenuListener implements Listener {
             if (event.getCurrentItem() != null && event.getCurrentItem().hasItemMeta()
                     && event.getCurrentItem().getItemMeta().hasCustomModelData()) {
                 custommodeldata = event.getCurrentItem().getItemMeta().getCustomModelData();
+            }
+
+            if (custommodeldata == 10500) {
+                p.closeInventory();
+                p.performCommand("colorchat");
             }
 
             if (plugin.gradientItems.containsKey(custommodeldata)) {

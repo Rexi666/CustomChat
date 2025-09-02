@@ -44,6 +44,9 @@ Designed for performance and flexibility, CustomChat supports both legacy and mo
 | `customchat.chatcolor`                     | Allows access to /chatcolor                       |
 | `customchat.colorchat.color.<color>`       | Allows access to a specific color in colorchat    |
 | `customchat.colorchat.gradient.<gradient>` | Allows access to a specific gradient in colorchat |
+| `customchat.hover.item`                    | Allow access to [item]                            |
+| `customchat.hover.inv`                     | Allow access to [inv]                             |
+| `customchat.hover.ender`                   | Allow access to [ender]                           |
 
 ---
 

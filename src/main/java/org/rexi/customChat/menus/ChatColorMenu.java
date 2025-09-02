@@ -1,5 +1,7 @@
 package org.rexi.customChat.menus;
 
+import com.destroystokyo.paper.profile.PlayerProfile;
+import com.destroystokyo.paper.profile.ProfileProperty;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
@@ -9,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.rexi.customChat.CustomChat;
 
 import java.util.*;
@@ -72,13 +75,23 @@ public class ChatColorMenu{
             String permission = "customchat.colorchat.color." + key;
             boolean hasPermission = player.hasPermission(permission);
             String material = colorsSection.getString(key + ".material");
-            Component name = plugin.deserialize(colorsSection.getString(key + ".name"));
+            Component name = plugin.deserialize(colorsSection.getString(key + ".name", "&7Color"));
             List<String> lorePath = plugin.getChatColorList(hasPermission ? "menu.submenus.lore_color-unlocked" : "menu.submenus.lore_color-blocked");
 
             ItemStack item = createItem(material, name, lorePath, custommodeldata);
             inv.addItem(item);
 
             custommodeldata++;
+        }
+
+        ConfigurationSection backSection = plugin.getChatColorConfig().getConfigurationSection("back");
+        if (backSection != null && backSection.getBoolean("enabled")) {
+            String material = backSection.getString("material", "ARROW");
+            Component name = plugin.deserialize(backSection.getString("name", "&7Back"));
+            List<String> lorePath = plugin.getChatColorList("back.lore");
+
+            ItemStack item = createItem(material, name, lorePath, 10500);
+            inv.setItem(45, item);
         }
 
         player.openInventory(inv);
@@ -104,6 +117,16 @@ public class ChatColorMenu{
             custommodeldata++;
         }
 
+        ConfigurationSection backSection = plugin.getChatColorConfig().getConfigurationSection("back");
+        if (backSection != null && backSection.getBoolean("enabled")) {
+            String material = backSection.getString("material", "ARROW");
+            Component name = plugin.deserialize(backSection.getString("name", "&7Back"));
+            List<String> lorePath = plugin.getChatColorList("back.lore");
+
+            ItemStack item = createItem(material, name, lorePath, 10500);
+            inv.setItem(45, item);
+        }
+
         player.openInventory(inv);
     }
 
@@ -112,7 +135,7 @@ public class ChatColorMenu{
         if (material.startsWith("basehead-")) {
             String base64 = material.substring("basehead-".length());
             try {
-                item = getCustomHead(base64);
+                item = headFromBase64(base64);
             } catch (Exception ex) {
                 plugin.getLogger().warning("Invalid base64 head for material: " + material);
                 item = new ItemStack(Material.PLAYER_HEAD);
@@ -145,7 +168,21 @@ public class ChatColorMenu{
         return item;
     }
 
-    public static ItemStack getCustomHead(String base64) {
-        return SkullCreator.itemFromBase64(base64);
+    public static ItemStack headFromBase64(String base64) {
+        ItemStack head = new ItemStack(Material.PLAYER_HEAD);
+        if (base64 == null || base64.isEmpty()) return head;
+
+        SkullMeta meta = (SkullMeta) head.getItemMeta();
+        if (meta == null) return head;
+
+        try {
+            PlayerProfile profile = Bukkit.createProfile(UUID.randomUUID());
+            profile.setProperty(new ProfileProperty("textures", base64));
+            meta.setPlayerProfile(profile);
+            head.setItemMeta(meta);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return head;
     }
 }

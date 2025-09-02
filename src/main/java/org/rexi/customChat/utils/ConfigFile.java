@@ -6,6 +6,8 @@ import org.rexi.customChat.CustomChat;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ConfigFile {
     private final CustomChat plugin;
@@ -60,6 +62,30 @@ public class ConfigFile {
             plugin.addMessage("no_permission_color", "&cYou do not have permission to use the color &b{color}");
 
             plugin.changeMessagetoFormat();
+
+            plugin.reloadAllConfigs();
+        }
+
+        if (config.getInt("config_version") < 3) {
+            plugin.addConfigINT("config_version", 3);
+
+            plugin.addMessage("inv", "&8[&7My Inventory&8]");
+            plugin.addMessage("inv_hover", "&bClick to view player's inventory");
+            plugin.addMessage("inv_title", "&7Inventory of {player}");
+            plugin.addMessage("inv_not_available", "&cThat inventory is no longer available");
+            plugin.addMessage("item", "&8[&b{item}&8]");
+            plugin.addMessage("ender", "&8[&7My Ender Chest&8]");
+            plugin.addMessage("ender_hover", "&bClick to view player's ender chest");
+            plugin.addMessage("ender_title", "&7Ender Chest of {player}");
+            plugin.addMessage("ender_not_available", "&cThat ender chest is no longer available");
+
+            plugin.addChatColorConfigBoolean("back.enabled", true);
+            plugin.addChatColorConfig("back.material", "ARROW");
+            plugin.addChatColorConfig("back.name", "&7Back");
+            List<String> lore = new ArrayList<>();
+            lore.add("");
+            lore.add("&eClick to go to the previous page");
+            plugin.addChatColorConfigList("back.lore", lore);
 
             plugin.reloadAllConfigs();
         }

@@ -18,6 +18,7 @@ import org.rexi.customChat.listeners.LegacyChatListener;
 import org.rexi.customChat.listeners.MenuListener;
 import org.rexi.customChat.listeners.NewChatListener;
 import org.rexi.customChat.utils.ConfigFile;
+import org.rexi.customChat.utils.InventoryManager;
 import org.rexi.customChat.utils.UpdateChecker;
 
 import java.sql.SQLException;
@@ -30,15 +31,18 @@ public final class CustomChat extends JavaPlugin {
     public final Map<Integer, String> colorItems = new HashMap<>();
     public final Map<Integer, String> gradientItems = new HashMap<>();
 
-    private ConfigFile messagesFile;
-    private ConfigFile formatsFile;
-    private ConfigFile chatcolorFile;
-    private ConfigFile configFile;
+    public ConfigFile messagesFile;
+    public ConfigFile formatsFile;
+    public ConfigFile chatcolorFile;
+    public ConfigFile configFile;
     private UpdateChecker updateChecker;
     private DatabaseManager databaseManager;
 
+    private static CustomChat instance;
+
     @Override
     public void onEnable() {
+        instance = this;
         saveDefaultConfig();
         messagesFile = new ConfigFile(this, "messages.yml");
         formatsFile = new ConfigFile(this, "formats.yml");
@@ -74,6 +78,8 @@ public final class CustomChat extends JavaPlugin {
         setMenuItems();
         getCommand("chatcolor").setExecutor(new ChatColorCommand(this));
         getServer().getPluginManager().registerEvents(new MenuListener(this), this);
+
+        getServer().getPluginManager().registerEvents(new InventoryManager(), this);
 
         int pluginId = 26809; // Reemplaza con el ID real de tu plugin en bStats
         Metrics metrics = new Metrics(this, pluginId);
@@ -215,6 +221,19 @@ public final class CustomChat extends JavaPlugin {
         messagesFile.save();
     }
 
+    public void addChatColorConfig(String path, String key) {
+        chatcolorFile.getConfig().set(path, key);
+        chatcolorFile.save();
+    }
+    public void addChatColorConfigBoolean(String path, Boolean key) {
+        chatcolorFile.getConfig().set(path, key);
+        chatcolorFile.save();
+    }
+    public void addChatColorConfigList(String path, List<String> key) {
+        chatcolorFile.getConfig().set(path, key);
+        chatcolorFile.save();
+    }
+
     public void changeMessagetoFormat() {
         FileConfiguration config = formatsFile.getConfig();
         ConfigurationSection section = config.getConfigurationSection("formats");
@@ -260,5 +279,9 @@ public final class CustomChat extends JavaPlugin {
 
             custommodeldata_gradients++;
         }
+    }
+
+    public static CustomChat getInstance() {
+        return instance;
     }
 }
