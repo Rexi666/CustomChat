@@ -89,5 +89,28 @@ public class ConfigFile {
 
             plugin.reloadAllConfigs();
         }
+
+        if (config.getInt("config_version") < 4) {
+            plugin.addConfigINT("config_version", 4);
+
+            plugin.addMessage("mention_enabled", "&aYou enabled mentions");
+            plugin.addMessage("mention_disabled", "&cYou disabled mentions");
+            plugin.addMessage("mention_function_disabled", "&cPlayer mentioning is disabled");
+
+            plugin.addConfigBoolean("mentioning.enabled", true);
+            plugin.addConfigBoolean("mentioning.requires_@", true);
+            plugin.addConfigBoolean("mentioning.toggle_enabled", true);
+            plugin.addConfigBoolean("mentioning.enabled_default", true);
+            plugin.addConfigBoolean("mentioning.op_disabled_default", true);
+            plugin.addConfig("mentioning.sound", "BLOCK_NOTE_BLOCK_PLING");
+            plugin.addConfig("mentioning.title.title", "&b{player} &ementioned you");
+            plugin.addConfig("mentioning.title.subtitle", "");
+            plugin.addConfigINT("mentioning.title.fadeIn", 10);
+            plugin.addConfigINT("mentioning.title.stay", 40);
+            plugin.addConfigINT("mentioning.title.fadeOut", 10);
+            plugin.addConfig("mentioning.message", "&b{player} &ementioned you. You can toggle this notification with &b/customchat mentiontoggle");
+
+            plugin.reloadAllConfigs();
+        }
     }
 }

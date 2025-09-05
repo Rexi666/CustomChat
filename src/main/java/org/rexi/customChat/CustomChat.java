@@ -215,6 +215,10 @@ public final class CustomChat extends JavaPlugin {
         configFile.getConfig().set(path, key);
         configFile.save();
     }
+    public void addConfigBoolean(String path, boolean key) {
+        configFile.getConfig().set(path, key);
+        configFile.save();
+    }
 
     public void addMessage(String path, String message) {
         messagesFile.getConfig().set("messages." + path, message);
@@ -283,5 +287,26 @@ public final class CustomChat extends JavaPlugin {
 
     public static CustomChat getInstance() {
         return instance;
+    }
+
+    Map<UUID, Boolean> playerMention = new HashMap<>();
+    public boolean getMentionEnabled(Player player) {
+        return playerMention.getOrDefault(player.getUniqueId(), false);
+    }
+    public void setMentionEnabled(Player player, boolean active) {
+        playerMention.put(player.getUniqueId(), active);
+        try {
+            databaseManager.setMentionEnabled(player.getUniqueId().toString(), active);
+        } catch (SQLException e) {
+            getLogger().severe("Failed to save player mention status on the database: " + e.getMessage());
+        }
+    }
+    public void getMentionEnabledFromDB(Player player) {
+        try {
+            boolean active = databaseManager.isMentionEnabled(player.getUniqueId().toString());
+            playerMention.put(player.getUniqueId(), active);
+        } catch (SQLException e) {
+            getLogger().severe("Failed to load player mention status on the database: " + e.getMessage());
+        }
     }
 }

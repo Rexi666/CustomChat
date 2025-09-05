@@ -15,3 +15,6 @@ permissions:
   customchat.format.default:
     description: Default format permission
     default: true
+  customchat.mentiontoggle:
+    description: Access to /customchat mentiontoggle
+    default: true

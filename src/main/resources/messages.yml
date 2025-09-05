@@ -18,3 +18,6 @@ messages:
   ender_hover: "&bClick to view player's ender chest"
   ender_title: "&7Ender Chest of {player}"
   ender_not_available: "&cThat ender chest is no longer available"
+  mention_enabled: "&aYou enabled mentions"
+  mention_disabled: "&cYou disabled mentions"
+  mention_function_disabled: "&cPlayer mentioning is disabled"

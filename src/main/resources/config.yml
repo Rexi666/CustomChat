@@ -1,6 +1,21 @@
-config_version: 2
+config_version: 4
 
 block_k: true #Block &k in chat messages, preventing players from using the magic formatting code.
+
+mentioning:
+  enabled: true
+  requires_@: true # requires @ before the name to mention
+  toggle_enabled: true # you can use /customchat mentiontoggle to toggle this feature per player
+  enabled_default: true # is this feature enabled by default? in case false, players will need to enable it with the command
+  op_disabled_default: true # op players, will have this feature disabled by default, they can enable it with the command
+  sound: BLOCK_NOTE_BLOCK_PLING # leave "" to disable. List: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
+  title:
+    title: "&b{player} &ementioned you" # leave "" for not showing
+    subtitle: "" # leave "" for not showing
+    fadeIn: 10
+    stay: 40
+    fadeOut: 10
+  message: "&b{player} &ementioned you. You can toggle this notification with &b/customchat mentiontoggle" # leave "" for not showing
 
 database:
     type: sqlite #Database type, can be 'sqlite' or 'mysql'.

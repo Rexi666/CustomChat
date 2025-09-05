@@ -10,6 +10,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.rexi.customChat.CustomChat;
+import org.rexi.customChat.config.ChatFormat;
 
 import java.util.Optional;
 
@@ -74,8 +75,12 @@ public class LegacyChatListener implements Listener {
 
             if (fullMessage.isPresent()) {
                 Component messageToSend = fullMessage.get();
+                boolean mention = plugin.getConfig().getBoolean("mentioning.enabled");
                 for (Player p : Bukkit.getOnlinePlayers()) {
                     p.sendMessage(messageToSend);
+                    if (mention) {
+                        ChatFormat.mention(player, p, messageToSend);
+                    }
                 }
                 Bukkit.getConsoleSender().sendMessage(messageToSend);
             } else {

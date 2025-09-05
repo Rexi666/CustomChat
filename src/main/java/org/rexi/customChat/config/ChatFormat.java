@@ -7,6 +7,8 @@ import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -15,6 +17,7 @@ import org.rexi.customChat.CustomChat;
 import org.rexi.customChat.utils.InventoryManager;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -237,6 +240,57 @@ public class ChatFormat {
             }
         }
         return finalComponent;
+    }
+
+    private static final PlainTextComponentSerializer PLAIN = PlainTextComponentSerializer.plainText();
+    public static void mention(Player player, Player target, Component content) {
+        if (player.equals(target)) return;
+
+        String message = PLAIN.serialize(content);
+        if (!message.contains(target.getName())) return;
+
+        boolean enabled = CustomChat.getInstance().getMentionEnabled(target);
+        if (!enabled) return;
+
+        boolean needTo = CustomChat.getInstance().getConfig().getBoolean("mentioning.requires_@");
+        if (needTo && !message.contains("@"+target.getName())) return;
+
+        String sound = CustomChat.getInstance().getConfig().getString("mentioning.sound", "BLOCK_NOTE_BLOCK_PLING");
+        boolean hasSound = !sound.isEmpty();
+        if (hasSound) {
+            Sound finalSound;
+            try {
+                finalSound = Sound.valueOf(sound.toUpperCase(Locale.ROOT));
+            } catch (IllegalArgumentException e) {
+                finalSound = Sound.BLOCK_NOTE_BLOCK_PLING;
+            }
+            target.playSound(target.getLocation(), finalSound, 1, 1);
+        }
+
+        String title = CustomChat.getInstance().getConfig()
+                .getString("mentioning.title.title", "&b{player} &ementioned you")
+                .replace("{player}", player.getName());
+        boolean hasTitle = !title.isEmpty();
+        String subTitle = CustomChat.getInstance().getConfig().getString("mentioning.title.subtitle", "");
+        boolean hasSubTitle = !subTitle.isEmpty();
+
+        int fadeIn = CustomChat.getInstance().getConfig().getInt("mentioning.title.fadeIn", 10);
+        int stay = CustomChat.getInstance().getConfig().getInt("mentioning.title.stay", 40);
+        int fadeOut = CustomChat.getInstance().getConfig().getInt("mentioning.title.fadeOut", 10);
+
+        if (hasTitle || hasSubTitle) {
+            target.sendTitle(ChatColor.translateAlternateColorCodes('&', title),
+                    ChatColor.translateAlternateColorCodes('&', subTitle),
+                    fadeIn, stay, fadeOut);
+        }
+
+        String mentionMessage = CustomChat.getInstance().getConfig()
+                .getString("mentioning.message", "&b{player} &ementioned you. You can toggle this notification with &b/customchat mentiontoggle")
+                .replace("{player}", player.getName());
+        boolean hasmentionMessage = !mentionMessage.isEmpty();
+        if (hasmentionMessage) {
+            target.sendMessage(CustomChat.getInstance().deserialize(mentionMessage));
+        }
     }
 }
 

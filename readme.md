@@ -27,10 +27,11 @@ Designed for performance and flexibility, CustomChat supports both legacy and mo
 
 ## 📦 Commands
 
-| Command              | Description              | Permission             |
-|----------------------|--------------------------|------------------------|
-| `/customchat reload` | Reloads the config file  | `customchat.admin`     |
-| `/chatcolor`         | Opens the chatcolor menu | `customchat.chatcolor` |
+| Command                     | Description                                     | Permission                 |
+|-----------------------------|-------------------------------------------------|----------------------------|
+| `/customchat reload`        | Reloads the config file                         | `customchat.admin`         |
+| `/chatcolor`                | Opens the chatcolor menu                        | `customchat.chatcolor`     |
+| `/customchat mentiontoggle` | In case mentioning is enable, toggle per player | `customchat.mentiontoggle` |
 
 ---
 
@@ -47,6 +48,7 @@ Designed for performance and flexibility, CustomChat supports both legacy and mo
 | `customchat.hover.item`                    | Allow access to [item]                            |
 | `customchat.hover.inv`                     | Allow access to [inv]                             |
 | `customchat.hover.ender`                   | Allow access to [ender]                           |
+| `customchat.mentiontoggle`                 | Allow access to /customchat mentiontoggle         |
 
 ---
 

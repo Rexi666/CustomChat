@@ -1,9 +1,11 @@
 package org.rexi.customChat.database;
 
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.sql.*;
+import java.util.UUID;
 
 public class DatabaseManager {
     private final JavaPlugin plugin;
@@ -33,16 +35,22 @@ public class DatabaseManager {
         }
 
         plugin.getLogger().info("Connected to " + type.toUpperCase() + " database!");
-        createTable();
+        createTables();
     }
 
-    private void createTable() throws SQLException {
-        String sql = "CREATE TABLE IF NOT EXISTS player_chat_color (" +
-                "uuid VARCHAR(36) PRIMARY KEY," +
-                "color TEXT" +
-                ")";
+    private void createTables() throws SQLException {
         try (Statement stmt = connection.createStatement()) {
-            stmt.executeUpdate(sql);
+            // Tabla para colores
+            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS player_chat_color (" +
+                    "uuid VARCHAR(36) PRIMARY KEY," +
+                    "color TEXT" +
+                    ")");
+
+            // Tabla para menciones
+            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS mention (" +
+                    "uuid VARCHAR(36) PRIMARY KEY," +
+                    "enabled BOOLEAN" +
+                    ")");
         }
     }
 
@@ -65,6 +73,38 @@ public class DatabaseManager {
             }
         }
         return "";
+    }
+
+    // ---- MÉTODOS MENTION ----
+    public void setMentionEnabled(String uuid, boolean enabled) throws SQLException {
+        String sql = "REPLACE INTO mention (uuid, enabled) VALUES (?, ?)";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, uuid);
+            ps.setBoolean(2, enabled);
+            ps.executeUpdate();
+        }
+    }
+
+    public boolean isMentionEnabled(String uuid) throws SQLException {
+        String sql = "SELECT enabled FROM mention WHERE uuid = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, uuid);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getBoolean("enabled");
+            }
+        }
+        boolean byDefault = plugin.getConfig().getBoolean("mentioning.enabled_default", true);
+        boolean op = plugin.getConfig().getBoolean("mentioning.op_disabled_default", true);
+        if (byDefault) {
+            if (op && Bukkit.getPlayer(UUID.fromString(uuid)).isOp()) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return false;
+        }
     }
 
     public void close() {
