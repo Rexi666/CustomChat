@@ -1,4 +1,4 @@
-# chatcolor command, allows players to decide the color of their chat messages.
+# Chatcolor command, allows players to decide the color of their chat messages.
 # Players need customchat.colorchat.color.<color> permission to use a specific color.
 # And customchat.colorchat.gradient.<gradient> for gradients.
 chatcolor:
