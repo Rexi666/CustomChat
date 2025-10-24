@@ -1,4 +1,4 @@
-config_version: 4
+config_version: 5 # DONT change this number
 
 block_k: true #Block &k in chat messages, preventing players from using the magic formatting code.
 
@@ -16,6 +16,16 @@ mentioning:
     stay: 40
     fadeOut: 10
   message: "&b{player} &ementioned you. You can toggle this notification with &b/customchat mentiontoggle" # leave "" for not showing
+
+discord_hook:
+  enabled: false # Enable Discord webhook integration. All minecraft messages will be sent to the webhook.
+  url: "https://discord.com/api/webhooks/xxxxxxxx/yyyyyyyyyyyy" # Your Discord webhook URL.
+  username: "{player}" # Name of the webhook bot. You can use {player} placeholder.
+  message: "**{player}**: {message}" # Message format sent to Discord. You can use {player} and {message} placeholders.
+  embed:
+    enabled: true # If enabled, messages will be sent as embeds.
+    color_rgb: "8,139,168"
+    title: "New Message from **{player}**" # You can use {player} placeholder.
 
 database:
     type: sqlite #Database type, can be 'sqlite' or 'mysql'.

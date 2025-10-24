@@ -20,6 +20,7 @@ import org.rexi.customChat.listeners.NewChatListener;
 import org.rexi.customChat.utils.ConfigFile;
 import org.rexi.customChat.utils.InventoryManager;
 import org.rexi.customChat.utils.UpdateChecker;
+import org.rexi.customChat.utils.WebhookManager;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -61,11 +62,11 @@ public final class CustomChat extends JavaPlugin {
 
         loadFormats();
         if (hasClass("io.papermc.paper.event.player.AsyncChatEvent")) {
-            getServer().getPluginManager().registerEvents(new NewChatListener(this), this);
+            getServer().getPluginManager().registerEvents(new NewChatListener(this, new WebhookManager(this)), this);
 
             getLogger().info("Paper 1.19+ was detected, using Paper's chat event.");
         } else {
-            getServer().getPluginManager().registerEvents(new LegacyChatListener(this), this);
+            getServer().getPluginManager().registerEvents(new LegacyChatListener(this, new WebhookManager(this)), this);
 
             getLogger().info("Unable to detect Paper 1.19+, using legacy chat event.");
         }
@@ -143,7 +144,7 @@ public final class CustomChat extends JavaPlugin {
                 return Component.text(input);
             }
         }
-        return LEGACY_HEX_SERIALIZER.deserialize(input);
+        return LEGACY_HEX_SERIALIZER.deserialize(input.replace("§", "&"));
     }
 
     private static boolean hasClass(String className) {

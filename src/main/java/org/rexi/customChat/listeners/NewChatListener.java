@@ -12,14 +12,17 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.rexi.customChat.CustomChat;
 import org.rexi.customChat.config.ChatFormat;
+import org.rexi.customChat.utils.WebhookManager;
 
 import java.util.Optional;
 
 public class NewChatListener implements Listener {
     private final CustomChat plugin;
+    private final WebhookManager webhookManager;
 
-    public NewChatListener(CustomChat plugin) {
+    public NewChatListener(CustomChat plugin, WebhookManager webhookManager) {
         this.plugin = plugin;
+        this.webhookManager = webhookManager;
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
@@ -86,6 +89,12 @@ public class NewChatListener implements Listener {
             } else {
                 player.sendMessage(Component.text(message));
                 Bukkit.getConsoleSender().sendMessage(Component.text(message));
+            }
+
+            if (plugin.getConfig().getBoolean("discord_hook.enabled", false)) {
+                String finalmessage = message.replaceAll("&[0-9a-fk-orA-FK-OR]", "");
+                finalmessage = finalmessage.replaceAll("<[^>]*>", "");
+                webhookManager.send(finalmessage, player.getName());
             }
         });
     }

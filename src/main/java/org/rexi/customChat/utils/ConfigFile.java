@@ -112,5 +112,19 @@ public class ConfigFile {
 
             plugin.reloadAllConfigs();
         }
+
+        if (config.getInt("config_version") < 5) {
+            plugin.addConfigINT("config_version", 5);
+
+            plugin.addConfigBoolean("discord_hook.enabled", false);
+            plugin.addConfig("discord_hook.url", "https://discord.com/api/webhooks/xxxxxxxx/yyyyyyyyyyyy");
+            plugin.addConfig("discord_hook.username", "{player}");
+            plugin.addConfig("discord_hook.message", "**{player}**: {message}");
+            plugin.addConfigBoolean("discord_hook.embed.enabled", true);
+            plugin.addConfig("discord_hook.embed.color_rgb", "8,139,168");
+            plugin.addConfig("discord_hook.embed.title", "New Message from **{player}**");
+
+            plugin.reloadAllConfigs();
+        }
     }
 }
