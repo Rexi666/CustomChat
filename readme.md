@@ -74,7 +74,7 @@ Designed for performance and flexibility, CustomChat supports both legacy and mo
 ---
 
 ### 💬 Need Help or Support?
-📖 Wiki: https://rexi666-plugins.gitbook.io/rexi666/customchat/installation
+📖 Wiki: https://rexi666-plugins.gitbook.io/rexi666/customchat
 
 Join my Discord server (Spanish/English):
 <p align="center">
