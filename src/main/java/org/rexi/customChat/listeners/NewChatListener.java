@@ -92,9 +92,12 @@ public class NewChatListener implements Listener {
             }
 
             if (plugin.getConfig().getBoolean("discord_hook.enabled", false)) {
-                String finalmessage = message.replaceAll("&[0-9a-fk-orA-FK-OR]", "");
-                finalmessage = finalmessage.replaceAll("<[^>]*>", "");
-                webhookManager.send(finalmessage, player.getName());
+                String finalmessage = message.replaceAll("&[0-9a-fk-orA-FK-OR]", "")
+                        .replaceAll("<[^>]*>", "");
+
+                Bukkit.getScheduler().runTaskAsynchronously(plugin, () ->
+                        webhookManager.send(finalmessage, player.getName(), player.getUniqueId().toString())
+                );
             }
         });
     }
