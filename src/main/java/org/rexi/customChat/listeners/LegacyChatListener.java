@@ -95,7 +95,7 @@ public class LegacyChatListener implements Listener {
                 String finalmessage = message
                         .replaceAll("&[0-9a-fk-orA-FK-OR]", "")
                         .replaceAll("<[^>]*>", "")
-                        .replace("@here", "").replace("@everyone", "");
+                        .replaceAll("@\\s*(here|everyone)", "");
 
                 Bukkit.getScheduler().runTaskAsynchronously(plugin, () ->
                         webhookManager.send(finalmessage, player.getName(), player.getUniqueId().toString())
