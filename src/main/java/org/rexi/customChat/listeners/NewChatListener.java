@@ -58,7 +58,6 @@ public class NewChatListener implements Listener {
 
                 Component fixedPart = Component.empty()
                         .append(display)
-                        .append(Component.space())
                         .append(twoPoints)
                         .append(Component.space());
 

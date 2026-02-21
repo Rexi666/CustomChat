@@ -126,5 +126,17 @@ public class ConfigFile {
 
             plugin.reloadAllConfigs();
         }
+
+        if (config.getInt("config_version") < 6) {
+            plugin.addConfigINT("config_version", 6);
+
+            plugin.addMessage("location", "&8[&7My Location: &b{location}&8]");
+            plugin.addMessage("location_placeholder", "World: {world}, X: {x}, Y: {y}, Z: {z}");
+            plugin.addMessage("location_hover", "&bClick to copy the location to your clipboard");
+            plugin.addMessage("ping", "&8[&7My Ping: {ping_color}{ping}&7ms&8]");
+            plugin.addMessage("ping_hover", "{ping_color}{ping}&7ms");
+
+            plugin.reloadAllConfigs();
+        }
     }
 }

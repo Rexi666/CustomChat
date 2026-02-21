@@ -37,7 +37,7 @@ public class ChatFormat {
 
         this.permission = "customchat.format."+sectionName;
         this.display = section.getString("display", "{displayName}");
-        this.twoPoints = section.getString("two_points", "&8: ");
+        this.twoPoints = section.getString("two_points", "&8 »");
         this.format = section.getString("format", "&f");
         this.hover = section.getStringList("hover.message");
         this.clickType = section.getString("hover.click_action.type", "none");
@@ -99,6 +99,12 @@ public class ChatFormat {
         }
         if (withPlaceholders.contains("[ender]") && player.hasPermission("customchat.hover.ender")) {
             finalComponent = hoverEnder(player, withPlaceholders, customColor, chatColor);
+        }
+        if (withPlaceholders.contains("[location]") && player.hasPermission("customchat.hover.location")) {
+            finalComponent = hoverLocation(player, withPlaceholders, customColor, chatColor);
+        }
+        if (withPlaceholders.contains("[ping]") && player.hasPermission("customchat.hover.ping")) {
+            finalComponent = hoverPing(player, withPlaceholders, customColor, chatColor);
         }
 
         return finalComponent;
@@ -227,6 +233,69 @@ public class ChatFormat {
                 Component itemComponent = plugin.getMessage("ender")
                         .hoverEvent(HoverEvent.showText(plugin.getMessage("ender_hover")))
                         .clickEvent(ClickEvent.runCommand("/customchat viewender " + sha1));
+
+                finalComponent = finalComponent.append(itemComponent);
+            } else {
+                if (customColor) {
+                    finalComponent = finalComponent.append(plugin.deserialize(part));
+                } else if (chatcolor != null && !chatcolor.isEmpty()) {
+                    finalComponent = finalComponent.append(plugin.deserialize(chatcolor + part));
+                } else {
+                    finalComponent = finalComponent.append(plugin.deserialize(format + part));
+                }
+            }
+        }
+        return finalComponent;
+    }
+
+    private Component hoverLocation(Player player, String withPlaceholders, boolean customColor, String chatcolor) {
+        String[] parts = withPlaceholders.split("(?=\\[location\\])|(?<=\\[location\\])");
+        Component finalComponent = Component.empty();
+
+        for (String part : parts) {
+            if (part.equalsIgnoreCase("[location]")) {
+                String location = plugin.messagesFile.getConfig().getString("messages.location_placeholder", "&cMessage not found: location_placeholder")
+                        .replace("{world}", player.getWorld().getName())
+                        .replace("{x}", String.valueOf(player.getLocation().getBlockX()))
+                        .replace("{y}", String.valueOf(player.getLocation().getBlockY()))
+                        .replace("{z}", String.valueOf(player.getLocation().getBlockZ()));
+                Component itemComponent = plugin.getMessage("location", "{location}", location)
+                        .hoverEvent(HoverEvent.showText(plugin.getMessage("location_hover")))
+                        .clickEvent(ClickEvent.copyToClipboard(location));
+
+                finalComponent = finalComponent.append(itemComponent);
+            } else {
+                if (customColor) {
+                    finalComponent = finalComponent.append(plugin.deserialize(part));
+                } else if (chatcolor != null && !chatcolor.isEmpty()) {
+                    finalComponent = finalComponent.append(plugin.deserialize(chatcolor + part));
+                } else {
+                    finalComponent = finalComponent.append(plugin.deserialize(format + part));
+                }
+            }
+        }
+        return finalComponent;
+    }
+
+    private Component hoverPing(Player player, String withPlaceholders, boolean customColor, String chatcolor) {
+        String[] parts = withPlaceholders.split("(?=\\[ping\\])|(?<=\\[ping\\])");
+        Component finalComponent = Component.empty();
+
+        for (String part : parts) {
+            if (part.equalsIgnoreCase("[ping]")) {
+                int ping = player.getPing();
+                String pingColor;
+                if (ping < 80) {
+                    pingColor = "&a";
+                } else if (ping < 150) {
+                    pingColor = "&e";
+                } else if (ping < 300) {
+                    pingColor = "&c";
+                } else {
+                    pingColor = "&4";
+                }
+                Component itemComponent = plugin.getMessage("ping", "{ping}", String.valueOf(ping), "{ping_color}", pingColor)
+                        .hoverEvent(HoverEvent.showText(plugin.getMessage("ping_hover", "{ping}", String.valueOf(ping), "{ping_color}", pingColor)));
 
                 finalComponent = finalComponent.append(itemComponent);
             } else {

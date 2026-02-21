@@ -1,4 +1,4 @@
-config_version: 5 # DONT change this number
+config_version: 6 # DONT change this number
 
 block_k: true #Block &k in chat messages, preventing players from using the magic formatting code.
 

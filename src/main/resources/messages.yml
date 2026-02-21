@@ -21,3 +21,8 @@ messages:
   mention_enabled: "&aYou enabled mentions"
   mention_disabled: "&cYou disabled mentions"
   mention_function_disabled: "&cPlayer mentioning is disabled"
+  location: "&8[&7My Location: &b{location}&8]"
+  location_placeholder: "World: {world}, X: {x}, Y: {y}, Z: {z}"
+  location_hover: "&bClick to copy the location to your clipboard"
+  ping: "&8[&7My Ping: {ping_color}{ping}&7ms&8]" # ping_color is determined by the ping value. <80 green, <150 yellow, <300 red, >=300 dark_red
+  ping_hover: "{ping_color}{ping}&7ms"

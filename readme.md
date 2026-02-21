@@ -48,6 +48,8 @@ Designed for performance and flexibility, CustomChat supports both legacy and mo
 | `customchat.hover.item`                    | Allow access to [item]                            |
 | `customchat.hover.inv`                     | Allow access to [inv]                             |
 | `customchat.hover.ender`                   | Allow access to [ender]                           |
+| `customchat.hover.location`                | Allow access to [location]                        |
+| `customchat.hover.ping`                    | Allow access to [ping]                            |
 | `customchat.mentiontoggle`                 | Allow access to /customchat mentiontoggle         |
 
 ---
