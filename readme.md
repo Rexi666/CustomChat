@@ -35,7 +35,7 @@ Designed for performance and flexibility, CustomChat supports both legacy and mo
 | `/msg <player> <message>`   | Send a private message to a player                         | `customchat.message`       |
 | `/reply <message>`          | Reply to the last player who sent a msg                    | `customchat.message`       |
 | `/ignore <player>`          | Ignore messages from a specific player                     | `customchat.ignore`        |
-| `/spy [player]`             | Spy on messages sent by a specific player                  | `customchat.spy`           |
+| `/spy [player]`             | Spy on private messages                                    | `customchat.spy`           |
 | `/chatlock`                 | Lock the chat for all players except those with permission | `customchat.chatlock`      |
 
 ---
