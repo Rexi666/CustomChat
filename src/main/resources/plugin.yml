@@ -11,6 +11,21 @@ commands:
   chatcolor:
     description: Opens the chat color menu
     aliases: [colorchat]
+  msg:
+    description: Sends a private message to a player
+    aliases: [message, tell]
+  reply:
+    description: Sends a private message to a recent player
+    aliases: [r]
+  ignore:
+    description: Ignores a player, preventing them from sending you messages
+    aliases: [block]
+  spy:
+    description: Spies on messages sent by a player
+  chatlock:
+    description: Locks the chat for all players except those with permission
+    aliases: [lockchat]
+
 permissions:
   customchat.format.default:
     description: Default format permission
@@ -18,3 +33,15 @@ permissions:
   customchat.mentiontoggle:
     description: Access to /customchat mentiontoggle
     default: true
+  customchat.message:
+    description: Access to /message
+    default: true
+  customchat.ignore:
+    description: Access to /ignore
+    default: true
+  customchat.spy:
+    description: Access to /spy
+    default: op
+  customchat.chatlock:
+    description: Access to /chatlock
+    default: op

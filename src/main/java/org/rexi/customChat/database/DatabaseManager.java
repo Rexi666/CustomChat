@@ -5,6 +5,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.sql.*;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 public class DatabaseManager {
@@ -50,6 +52,13 @@ public class DatabaseManager {
             stmt.executeUpdate("CREATE TABLE IF NOT EXISTS mention (" +
                     "uuid VARCHAR(36) PRIMARY KEY," +
                     "enabled BOOLEAN" +
+                    ")");
+
+            // Tabla para ignore
+            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS ignored_players (" +
+                    "player_uuid VARCHAR(36) NOT NULL," +
+                    "ignored_uuid VARCHAR(36) NOT NULL," +
+                    "PRIMARY KEY (player_uuid, ignored_uuid)" +
                     ")");
         }
     }
@@ -105,6 +114,43 @@ public class DatabaseManager {
         } else {
             return false;
         }
+    }
+
+    public void addIgnoredPlayer(String playerUUID, String ignoredUUID) throws SQLException {
+        String sql = "REPLACE INTO ignored_players (player_uuid, ignored_uuid) VALUES (?, ?)";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, playerUUID);
+            ps.setString(2, ignoredUUID);
+            ps.executeUpdate();
+        }
+    }
+
+    public void removeIgnoredPlayer(String playerUUID, String ignoredUUID) throws SQLException {
+        String sql = "DELETE FROM ignored_players WHERE player_uuid = ? AND ignored_uuid = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, playerUUID);
+            ps.setString(2, ignoredUUID);
+            ps.executeUpdate();
+        }
+    }
+
+    public Set<UUID> getIgnoredPlayers(String playerUUID) throws SQLException {
+        Set<UUID> ignored = new HashSet<>();
+
+        String sql = "SELECT ignored_uuid FROM ignored_players WHERE player_uuid = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, playerUUID);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                ignored.add(UUID.fromString(rs.getString("ignored_uuid")));
+            }
+        }
+
+        return ignored;
     }
 
     public void close() {

@@ -138,5 +138,59 @@ public class ConfigFile {
 
             plugin.reloadAllConfigs();
         }
+
+        if (config.getInt("config_version") < 7) {
+            plugin.addConfigINT("config_version", 7);
+
+            plugin.addMessage("msg_usage", "&cUsage: /msg <player> <message>");
+            plugin.addMessage("msg", "&7[&b{player} > {target}&7] &e{message}");
+            plugin.addMessage("msg_offline", "&c{player} is currently offline.");
+            plugin.addMessage("msg_self", "&cYou cannot message yourself.");
+            plugin.addMessage("msg_ignoring", "&c{player} is ignoring you.");
+            plugin.addMessage("reply_usage", "&cUsage: /reply <message>");
+            plugin.addMessage("reply_offline", "&cYou have no one to reply to.");
+            plugin.addMessage("ignore_usage", "&cUsage: /ignore <player>");
+            plugin.addMessage("ignore_self", "&cYou cannot ignore yourself.");
+            plugin.addMessage("ignore_offline", "&c{player} is currently offline.");
+            plugin.addMessage("ignore_bypass", "&cYou cannot ignore {player}.");
+            plugin.addMessage("ignore_added", "&aYou have ignored {player}.");
+            plugin.addMessage("ignore_removed", "&aYou have unignored {player}.");
+            plugin.addMessage("spy_self", "&cYou cannot spy on yourself.");
+            plugin.addMessage("spy_offline", "&c{player} is currently offline.");
+            plugin.addMessage("spy_enabled", "&aYou have enabled spy mode.");
+            plugin.addMessage("spy_disabled", "&cYou have disabled spy mode.");
+            plugin.addMessage("spy_player_enabled", "&aYou have enabled spy mode for {player}.");
+            plugin.addMessage("spy_player_disabled", "&cYou have disabled spy mode for {player}.");
+            plugin.addMessage("chatlock_enabled", "&aYou have locked the chat.");
+            plugin.addMessage("chatlock_disabled", "&cYou have unlocked the chat.");
+            plugin.addMessage("chatlock_active", "&cThe chat is currently locked. You cannot send messages.");
+            plugin.addMessage("chatlock_start", "&cThe chat has been locked by {player}.");
+            plugin.addMessage("chatlock_end", "&aThe chat has been unlocked by {player}.");
+            plugin.addMessage("console", "Console");
+
+            plugin.addConfigBoolean("join_leave_messages.enabled", true);
+            plugin.addConfig("join_leave_messages.join_message", "&a+ &r%luckperms_prefix% &e{player}");
+            plugin.addConfig("join_leave_messages.leave_message", "&c- &r%luckperms_prefix% &e{player}");
+
+            plugin.addConfigBoolean("death_messages.enabled", true);
+            plugin.addConfig("death_messages.placeholder_killer", "by {player}");
+            plugin.addConfig("death_messages.default", "&c☠ &e{player} died.");
+            plugin.addConfig("death_messages.fall", "&c☠ &e{player} &7fell from a high place.");
+            plugin.addConfig("death_messages.lava", "&c☠ &e{player} &7tried to swim in lava.");
+            plugin.addConfig("death_messages.fire", "&c☠ &e{player} &7went up in flames.");
+            plugin.addConfig("death_messages.fire_tick", "&c☠ &e{player} &7burned to death.");
+            plugin.addConfig("death_messages.drowning", "&c☠ &e{player} &7drowned.");
+            plugin.addConfig("death_messages.suffocation", "&c☠ &e{player} &7suffocated in a wall.");
+            plugin.addConfig("death_messages.void", "&c☠ &e{player} &7fell into the void.");
+            plugin.addConfig("death_messages.explosion", "&c☠ &e{player} &7blew up.");
+            plugin.addConfig("death_messages.entity_attack", "&c☠ &e{player} &7was slain {killer}.");
+            plugin.addConfig("death_messages.projectile", "&c☠ &e{player} &7was shot {killer}.");
+            plugin.addConfig("death_messages.magic", "&c☠ &e{player} &7was killed by magic.");
+            plugin.addConfig("death_messages.lightning", "&c☠ &e{player} &7was struck by lightning.");
+            plugin.addConfig("death_messages.freeze", "&c☠ &e{player} &7froze to death.");
+            plugin.addConfig("death_messages.starvation", "&c☠ &e{player} &7starved to death.");
+
+            plugin.reloadAllConfigs();
+        }
     }
 }

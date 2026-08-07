@@ -1,4 +1,4 @@
-config_version: 6 # DONT change this number
+config_version: 7 # DONT change this number
 
 block_k: true #Block &k in chat messages, preventing players from using the magic formatting code.
 
@@ -35,3 +35,27 @@ database:
       database: "customchat" #MySQL database name.
       username: "root" #MySQL username.
       password: "" #MySQL password.
+
+join_leave_messages:
+  enabled: true # Enable join/leave messages.
+  join_message: "&a+ &r%luckperms_prefix% &e{player}" # Join message format. You can use {player} placeholder.
+  leave_message: "&c- &r%luckperms_prefix% &e{player}" # Leave message format. You can use {player} placeholder.
+
+death_messages:
+  enabled: true # Enable death messages.
+  placeholder_killer: "by {player}"
+  default: "&c☠ &e{player} died."
+  fall: "&c☠ &e{player} &7fell from a high place."
+  lava: "&c☠ &e{player} &7tried to swim in lava."
+  fire: "&c☠ &e{player} &7went up in flames."
+  fire_tick: "&c☠ &e{player} &7burned to death."
+  drowning: "&c☠ &e{player} &7drowned."
+  suffocation: "&c☠ &e{player} &7suffocated in a wall."
+  void: "&c☠ &e{player} &7fell into the void."
+  explosion: "&c☠ &e{player} &7blew up."
+  entity_attack: "&c☠ &e{player} &7was slain {killer}."
+  projectile: "&c☠ &e{player} &7was shot {killer}."
+  magic: "&c☠ &e{player} &7was killed by magic."
+  lightning: "&c☠ &e{player} &7was struck by lightning."
+  freeze: "&c☠ &e{player} &7froze to death."
+  starvation: "&c☠ &e{player} &7starved to death."

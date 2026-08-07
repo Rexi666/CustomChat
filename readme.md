@@ -27,11 +27,16 @@ Designed for performance and flexibility, CustomChat supports both legacy and mo
 
 ## 📦 Commands
 
-| Command                     | Description                                     | Permission                 |
-|-----------------------------|-------------------------------------------------|----------------------------|
-| `/customchat reload`        | Reloads the config file                         | `customchat.admin`         |
-| `/chatcolor`                | Opens the chatcolor menu                        | `customchat.chatcolor`     |
-| `/customchat mentiontoggle` | In case mentioning is enable, toggle per player | `customchat.mentiontoggle` |
+| Command                     | Description                                                | Permission                 |
+|-----------------------------|------------------------------------------------------------|----------------------------|
+| `/customchat reload`        | Reloads the config file                                    | `customchat.admin`         |
+| `/chatcolor`                | Opens the chatcolor menu                                   | `customchat.chatcolor`     |
+| `/customchat mentiontoggle` | In case mentioning is enable, toggle per player            | `customchat.mentiontoggle` |
+| `/msg <player> <message>`   | Send a private message to a player                         | `customchat.message`       |
+| `/reply <message>`          | Reply to the last player who sent a msg                    | `customchat.message`       |
+| `/ignore <player>`          | Ignore messages from a specific player                     | `customchat.ignore`        |
+| `/spy [player]`             | Spy on messages sent by a specific player                  | `customchat.spy`           |
+| `/chatlock`                 | Lock the chat for all players except those with permission | `customchat.chatlock`      |
 
 ---
 
@@ -51,6 +56,11 @@ Designed for performance and flexibility, CustomChat supports both legacy and mo
 | `customchat.hover.location`                | Allow access to [location]                        |
 | `customchat.hover.ping`                    | Allow access to [ping]                            |
 | `customchat.mentiontoggle`                 | Allow access to /customchat mentiontoggle         |
+| `customchat.message`                       | Allow access to /msg and /reply                   | 
+| `customchat.ignore`                        | Allow access to /ignore                           |
+| `customchat.ignore.bypass`                 | Allow bypassing /ignore                           |
+| `customchat.spy`                           | Allow spying on private messages                  |
+| `customchat.chatlock`                      | Allow locking the chat for all players            |
 
 ---
 

@@ -9,18 +9,11 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.rexi.customChat.commands.ChatColorCommand;
-import org.rexi.customChat.commands.CustomchatCommand;
+import org.rexi.customChat.commands.*;
 import org.rexi.customChat.config.ChatFormat;
 import org.rexi.customChat.database.DatabaseManager;
-import org.rexi.customChat.listeners.ColorChatListener;
-import org.rexi.customChat.listeners.LegacyChatListener;
-import org.rexi.customChat.listeners.MenuListener;
-import org.rexi.customChat.listeners.NewChatListener;
-import org.rexi.customChat.utils.ConfigFile;
-import org.rexi.customChat.utils.InventoryManager;
-import org.rexi.customChat.utils.UpdateChecker;
-import org.rexi.customChat.utils.WebhookManager;
+import org.rexi.customChat.listeners.*;
+import org.rexi.customChat.utils.*;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -32,12 +25,17 @@ public final class CustomChat extends JavaPlugin {
     public final Map<Integer, String> colorItems = new HashMap<>();
     public final Map<Integer, String> gradientItems = new HashMap<>();
 
+    public Map<UUID, UUID> messageReplies = new HashMap<>();
+
+    public boolean chatlockActive = false;
+
     public ConfigFile messagesFile;
     public ConfigFile formatsFile;
     public ConfigFile chatcolorFile;
     public ConfigFile configFile;
     private UpdateChecker updateChecker;
     private DatabaseManager databaseManager;
+    private ChatManager chatManager;
 
     private static CustomChat instance;
 
@@ -60,27 +58,60 @@ public final class CustomChat extends JavaPlugin {
         }
         getServer().getPluginManager().registerEvents(new ColorChatListener(this), this);
 
+        chatManager = new ChatManager(this, new WebhookManager(this));
+
         loadFormats();
         if (hasClass("io.papermc.paper.event.player.AsyncChatEvent")) {
-            getServer().getPluginManager().registerEvents(new NewChatListener(this, new WebhookManager(this)), this);
+            getServer().getPluginManager().registerEvents(new NewChatListener(chatManager), this);
 
             getLogger().info("Paper 1.19+ was detected, using Paper's chat event.");
         } else {
-            getServer().getPluginManager().registerEvents(new LegacyChatListener(this, new WebhookManager(this)), this);
+            getServer().getPluginManager().registerEvents(new LegacyChatListener(chatManager), this);
 
             getLogger().info("Unable to detect Paper 1.19+, using legacy chat event.");
         }
 
-        updateChecker = new UpdateChecker(this, getDescription().getVersion(), "https://raw.githubusercontent.com/Rexi666/CustomChat/main/latest-version.txt");
-        updateChecker.checkForUpdates();
+        updateChecker = new UpdateChecker(this, getDescription().getVersion());
+        updateChecker.checkForUpdatesConsole();
 
-        getCommand("customchat").setExecutor(new CustomchatCommand(this, updateChecker));
+        CustomchatCommand customchatCommand = new CustomchatCommand(this, updateChecker);
+        getCommand("customchat").setExecutor(customchatCommand);
+        getCommand("customchat").setTabCompleter(customchatCommand);
+
+        MsgCommand msgCommand = new MsgCommand(this);
+        getCommand("msg").setExecutor(msgCommand);
+        getCommand("msg").setTabCompleter(msgCommand);
+        getCommand("message").setExecutor(msgCommand);
+        getCommand("message").setTabCompleter(msgCommand);
+        getCommand("tell").setExecutor(msgCommand);
+        getCommand("tell").setTabCompleter(msgCommand);
+
+        ReplyCommand replyCommand = new ReplyCommand(this);
+        getCommand("reply").setExecutor(replyCommand);
+        getCommand("r").setExecutor(replyCommand);
+
+        IgnoreCommand ignoreCommand = new IgnoreCommand(this);
+        getCommand("ignore").setExecutor(ignoreCommand);
+        getCommand("ignore").setTabCompleter(ignoreCommand);
+        getCommand("block").setExecutor(ignoreCommand);
+        getCommand("block").setTabCompleter(ignoreCommand);
+
+        SpyCommand spyCommand = new SpyCommand(this);
+        getCommand("spy").setExecutor(spyCommand);
+        getCommand("spy").setTabCompleter(spyCommand);
+
+        ChatlockCommand chatlockCommand = new ChatlockCommand(this);
+        getCommand("chatlock").setExecutor(chatlockCommand);
+        getCommand("lockchat").setExecutor(chatlockCommand);
 
         setMenuItems();
         getCommand("chatcolor").setExecutor(new ChatColorCommand(this));
         getServer().getPluginManager().registerEvents(new MenuListener(this), this);
 
         getServer().getPluginManager().registerEvents(new InventoryManager(), this);
+
+        getServer().getPluginManager().registerEvents(new JoinLeaveMessagesListener(this), this);
+        getServer().getPluginManager().registerEvents(new DeathListener(this), this);
 
         int pluginId = 26809; // Reemplaza con el ID real de tu plugin en bStats
         Metrics metrics = new Metrics(this, pluginId);
@@ -137,7 +168,9 @@ public final class CustomChat extends JavaPlugin {
             .build();
 
     public Component deserialize(String input) {
-        if (input.contains("<") && input.contains(">")) {
+        if (input.contains("&")) {
+            return LEGACY_HEX_SERIALIZER.deserialize(input.replace("§", "&"));
+        } else if (input.contains("<") && input.contains(">")) {
             try {
                 return MiniMessage.miniMessage().deserialize(input);
             } catch (Exception e) {
@@ -184,10 +217,14 @@ public final class CustomChat extends JavaPlugin {
             getLogger().severe("Failed to save player chat color on the database: " + e.getMessage());
         }
     }
+    public void cacheRemoveChatColor(Player player) {
+        playerChatColor.remove(player.getUniqueId());
+    }
 
     public String getPlayerChatColor(Player player) {
         return playerChatColor.get(player.getUniqueId());
     }
+
     public void getPlayerChatColorFromDB(Player player) {
         try {
             String color = databaseManager.getPlayerColor(player.getUniqueId().toString());
@@ -302,12 +339,71 @@ public final class CustomChat extends JavaPlugin {
             getLogger().severe("Failed to save player mention status on the database: " + e.getMessage());
         }
     }
+    public void cacheRemoveMentionEnabled(Player player) {
+        playerMention.remove(player.getUniqueId());
+    }
     public void getMentionEnabledFromDB(Player player) {
         try {
             boolean active = databaseManager.isMentionEnabled(player.getUniqueId().toString());
             playerMention.put(player.getUniqueId(), active);
         } catch (SQLException e) {
             getLogger().severe("Failed to load player mention status on the database: " + e.getMessage());
+        }
+    }
+
+    Map<UUID, Set<UUID>> ignoredPlayers = new HashMap<>();
+    public void getIgnoredPlayersFromDB(Player player) {
+        try {
+            ignoredPlayers.put(
+                    player.getUniqueId(),
+                    databaseManager.getIgnoredPlayers(player.getUniqueId().toString())
+            );
+        } catch (SQLException e) {
+            getLogger().severe("Failed to load player ignored list on the database: " + e.getMessage());
+        }
+    }
+    public void setIgnoredPlayers(UUID player, UUID ignored, boolean active) {
+        if (active) {
+            ignoredPlayers.computeIfAbsent(player, k -> new HashSet<>()).add(ignored);
+            try {
+                databaseManager.addIgnoredPlayer(player.toString(), ignored.toString());
+            } catch (SQLException e) {
+                getLogger().severe("Failed to save player ignored status on the database: " + e.getMessage());
+            }
+        } else {
+            Set<UUID> ignoredSet = ignoredPlayers.get(player);
+            if (ignoredSet != null) {
+                ignoredSet.remove(ignored);
+            }
+            try {
+                databaseManager.removeIgnoredPlayer(player.toString(), ignored.toString());
+            } catch (SQLException e) {
+                getLogger().severe("Failed to save player ignored status on the database: " + e.getMessage());
+            }
+        }
+    }
+    public boolean checkIgnoredPlayers(UUID player, UUID ignored) {
+        return ignoredPlayers.getOrDefault(player, Collections.emptySet()).contains(ignored);
+    }
+    public void cacheRemoveIgnoredPlayers(Player player) {
+        ignoredPlayers.remove(player.getUniqueId());
+    }
+
+    public Map<UUID, List<UUID>> spyPlayers = new HashMap<>(); // Target - List<UUID> of players spying on them
+    public List<UUID> spyGlobalPlayers = new ArrayList<>();
+
+    public void removeSpy(UUID spyUUID) {
+        Iterator<Map.Entry<UUID, List<UUID>>> iterator = spyPlayers.entrySet().iterator();
+
+        while (iterator.hasNext()) {
+            Map.Entry<UUID, List<UUID>> entry = iterator.next();
+
+            List<UUID> spies = entry.getValue();
+            spies.remove(spyUUID);
+
+            if (spies.isEmpty()) {
+                iterator.remove();
+            }
         }
     }
 }

@@ -20,18 +20,19 @@ public class UpdateChecker implements Listener {
 
     private final CustomChat plugin;
     private final String currentVersion;
-    private final String updateUrl;
 
-    public UpdateChecker(CustomChat plugin, String currentVersion, String updateUrl) {
+    public UpdateChecker(CustomChat plugin, String currentVersion) {
         this.plugin = plugin;
         this.currentVersion = currentVersion;
-        this.updateUrl = updateUrl;
     }
 
-    public void checkForUpdates() {
+    private final String lastVersion = "https://raw.githubusercontent.com/Rexi666/CustomChat/main/latest-version.txt";
+    private final String updateUrl = "https://www.spigotmc.org/resources/customchat.127697/";
+
+    public void checkForUpdatesConsole() {
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             try {
-                URL url = new URL(updateUrl);
+                URL url = new URL(lastVersion);
                 BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
                 String latestVersion = reader.readLine().trim();
                 reader.close();
@@ -40,7 +41,7 @@ public class UpdateChecker implements Listener {
                     Component message = plugin.getMessage("new_version_available",
                             "{current_version}", currentVersion,
                             "{new_version}", latestVersion,
-                            "{url}", "https://www.spigotmc.org/resources/customchat.127697/");
+                            "{url}", updateUrl);
                     Bukkit.getConsoleSender().sendMessage(message);
                 }
             } catch (IOException e) {
@@ -60,7 +61,7 @@ public class UpdateChecker implements Listener {
     public void checkForUpdatesPlayer(Player player) {
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             try {
-                URL url = new URL(updateUrl);
+                URL url = new URL(lastVersion);
                 BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
                 String latestVersion = reader.readLine().trim();
                 reader.close();
@@ -69,9 +70,9 @@ public class UpdateChecker implements Listener {
                     Component message = plugin.getMessage("new_version_available",
                             "{current_version}", currentVersion,
                             "{new_version}", latestVersion,
-                            "{url}", "https://www.spigotmc.org/resources/customchat.127697/");
+                            "{url}", updateUrl);
                     Component tpLine = message
-                            .clickEvent(ClickEvent.openUrl("https://www.spigotmc.org/resources/customchat.127697/"));
+                            .clickEvent(ClickEvent.openUrl(updateUrl));
                     player.sendMessage(tpLine);
                 }
             } catch (IOException e) {
@@ -83,7 +84,7 @@ public class UpdateChecker implements Listener {
 
     public void checkForUpdatesCommand(CommandSender sender) {
         try {
-            URL url = new URL(updateUrl);
+            URL url = new URL(lastVersion);
             BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
             String latestVersion = reader.readLine().trim();
             reader.close();
@@ -92,9 +93,9 @@ public class UpdateChecker implements Listener {
                 Component message = plugin.getMessage("new_version_available",
                         "{current_version}", currentVersion,
                         "{new_version}", latestVersion,
-                        "{url}", "https://www.spigotmc.org/resources/customchat.127697/");
+                        "{url}", updateUrl);
                 Component tpLine = message
-                        .clickEvent(ClickEvent.openUrl("https://www.spigotmc.org/resources/customchat.127697/"));
+                        .clickEvent(ClickEvent.openUrl(updateUrl));
                 sender.sendMessage(tpLine);
             } else {
                 Component message = plugin.getMessage("latest_version",
