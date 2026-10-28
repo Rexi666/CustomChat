@@ -42,11 +42,10 @@ public class ChatManager {
                     );
                 }
 
-                if (!format.getClickType().equals("none")) {
-                    ClickEvent.Action action = ClickEvent.Action.valueOf(format.getClickType().toUpperCase());
-                    String clickValue = format.getClickValue(player);
-                    clickEvent = ClickEvent.clickEvent(action, clickValue);
-                }
+                clickEvent = createClickEvent(
+                        format.getClickType(),
+                        format.getClickValue(player)
+                );
 
                 Component fixedPart = Component.empty()
                         .append(display)
@@ -94,4 +93,68 @@ public class ChatManager {
             }
         });
     }
+
+    private ClickEvent createClickEvent(String type, String value) {
+        if (type == null) {
+            return null;
+        }
+
+        String normalizedType = type.trim()
+                .toLowerCase(java.util.Locale.ROOT);
+
+        if (normalizedType.isEmpty() || normalizedType.equals("none")) {
+            return null;
+        }
+
+        if (value == null) {
+            plugin.getLogger().warning(
+                    "Couldnt create click event for type: " + type
+            );
+            return null;
+        }
+
+        try {
+            switch (normalizedType) {
+                case "open_url":
+                    return ClickEvent.openUrl(value);
+
+                case "open_file":
+                    return ClickEvent.openFile(value);
+
+                case "run_command":
+                    return ClickEvent.runCommand(value);
+
+                case "suggest_command":
+                    return ClickEvent.suggestCommand(value);
+
+                case "copy_to_clipboard":
+                    return ClickEvent.copyToClipboard(value);
+
+                case "change_page":
+                    int page = Integer.parseInt(value.trim());
+
+                    if (page < 1) {
+                        throw new IllegalArgumentException(
+                                "Page number must be greater than 0. Provided: " + page
+                        );
+                    }
+
+                    return ClickEvent.changePage(page);
+
+                default:
+                    plugin.getLogger().warning(
+                            "Unknown chat click type: " + type
+                    );
+                    return null;
+            }
+        } catch (IllegalArgumentException exception) {
+            plugin.getLogger().warning(
+                    "Invalid chat click event: type=" + type
+                            + ", value=" + value
+                            + ". " + exception.getMessage()
+            );
+            return null;
+        }
+    }
+
 }
